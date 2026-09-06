@@ -1,0 +1,1161 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{postulate}{Postulate}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\alef}{\aleph_{0}}
+\newcommand{\cont}{\mathfrak{c}}
+\newcommand{\Hil}{\mathcal{H}}
+\newcommand{\Uni}{\mathcal{U}}
+\newcommand{\Geo}{\mathcal{G}}
+\newcommand{\Samp}{\mathsf{S}}
+\newcommand{\KG}{K_{G}}
+\newcommand{\UTM}{\mathsf{U}_{G}}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\ket}[1]{\lvert#1\rangle}
+\newcommand{\bra}[1]{\langle#1\rvert}
+\newcommand{\braket}[2]{\langle#1|#2\rangle}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\Diff}{\operatorname{Diff}}
+
+\title{\textbf{k}: A Theory of Everything\\[0.4em]
+\large Quantum Field Theory as $\alef$, General Relativity as $\cont$,\\
+and the Kolmogorov Merge of Sampled Universes}
+\author{k}
+\date{2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A theory of everything must say how the two successful infinities of twentieth-century physics communicate.
+Quantum field theory is the physics of a separable Hilbert space: a countable orthonormal basis, occupation numbers, Fock modes, programs.
+That is Cantor's infinity of the integers, $\alef$.
+General relativity is the physics of a smooth Lorentzian $4$-manifold: uncountably many points, a metric of cardinality $\cont = 2^{\alef}$.
+That is Cantor's infinity of the reals.
+The continuum is the power set of the integers, so a classical universe is a completion of a countable quantum description.
+We take this as ontology, not metaphor.
+
+Universes are sampled from the quantum state of the universe.
+Each sample is a finite string---Cauchy data, a code, a program---drawn from the integer skeleton of that state.
+General relativity inflates the string to a continuum spacetime.
+The weight of the resulting universe is the gravitational Kolmogorov complexity of the sample: Einstein's equation is the shortest program that extends $3$-data to a $4$-geometry, and $2^{-\KG}$ is the corresponding Solomonoff measure.
+The physical world is the merge of these universes against those weights.
+The merge is a countable sum, hence well-defined; the continuum appears only after inflation.
+Classical Einstein gravity is the typical merge of low-complexity samples.
+Quantum field theory is the residual integer dynamics on the merged background.
+The gravitational path integral, the Born rule, black-hole entropy, the holographic bound, and the cosmological arrow of time are the same object viewed at different resolutions.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{The problem of two infinities}
+
+Physics has two working theories and two working infinities, and they are not the same infinity.
+
+Quantum field theory (QFT) is built on a separable Hilbert space $\Hil$.
+Separability means there is a countable orthonormal basis $\{\ket{n}\}_{n\in\N}$.
+Fock space is assembled from occupation numbers in $\N$.
+A lattice regularization, a mode expansion, a particle species, a spin component: all of these are indexed by integers.
+Even $L^{2}(\R^{n})$, whose classical configuration space is a continuum, admits a countable Hilbert basis (Hermite functions, Fourier modes on a box, wavelets).
+The quantum theory \emph{counts}.
+Its native cardinal is $\alef$, the infinity of the integers~\cite{cantor1891,halmos1974}.
+
+General relativity (GR) is built on a smooth $4$-manifold $(M,g)$.
+Any nonempty open $4$-manifold has $\abs{M}=\cont=2^{\alef}$ points.
+A smooth metric is a section of $\mathrm{Sym}^{2}T^{*}M$; the space of such sections has cardinality $\cont$, because a continuous function is determined by its values on a countable dense set~\cite{cantor1878}.
+The diffeomorphism group $\Diff(M)$ likewise has cardinality $\cont$.
+The Einstein equation is a differential equation on this continuum.
+GR's native cardinal is $\cont$, the infinity of the reals.
+
+These are not aesthetic preferences.
+They are the cardinalities of the objects the theories actually use.
+The obstruction to a theory of everything is not only that one theory is quantum and the other is geometric.
+It is that one theory lives at $\alef$ and the other lives at $\cont$, and Cantor's theorem says these are different sizes~\cite{cantor1891}:
+\begin{equation}
+  \alef \;<\; 2^{\alef} \;=\; \cont.
+\end{equation}
+There is no bijection between the integer skeleton of QFT and the continuum spacetime of GR.
+Any unification must therefore \emph{supply a map} from one infinity to the other, and a map back.
+
+The map forward is sampling plus inflation.
+The map back is a weighted merge.
+The weights are Kolmogorov complexity computed in a language that already contains Einstein's equation.
+That is the whole theory.
+The rest of this paper is the mathematics of those three sentences.
+
+\begin{figure}[t]
+\centering
+{\small
+\begin{tabular}{@{}c@{}}
+$\ket{\Omega}\in\Hil$ \quad ($\alef$, QFT skeleton)\\[2pt]
+$\big\downarrow$ \quad Born sample\\[2pt]
+$s\in\{0,1\}^{*}$ \quad (integer Cauchy data)\\[2pt]
+$\big\downarrow$ \quad GR inflation $\Gamma$\\[2pt]
+$U=\Gamma(s)\in\Geo$ \quad ($\cont$, continuum geometry)\\[2pt]
+$\big\downarrow$ \quad $\KG$\\[2pt]
+$W(s)\propto \abs{\psi_{s}}^{2}\,2^{-\KG(s)}$\\[2pt]
+$\big\downarrow$ \quad merge\\[2pt]
+$\rho_{\star}=\sum_{s}W(s)\,\ket{U_{s}}\bra{U_{s}}$ \quad (countable sum)\\[2pt]
+$\big\downarrow$ \quad effective state\\[2pt]
+back to a vector in $\Hil$
+\end{tabular}}
+\caption{The $k$-cycle.
+Quantum field theory supplies a countable state.
+Sampling reads a finite string from that state.
+General relativity completes the string to a continuum universe.
+Gravitational Kolmogorov complexity weights the universe.
+The merge is a countable sum of those weighted universes and returns an effective quantum state.}
+\label{fig:cycle}
+\end{figure}
+
+\section{Cantor, Kolmogorov, Einstein}
+
+\subsection{Cardinals}
+
+Write $\abs{X}$ for the cardinality of a set $X$.
+Cantor showed that $\abs{\N}=\alef$ is the smallest infinite cardinal, that $\abs{\R}=\cont=2^{\alef}$, and that there is no bijection $\N\to\R$~\cite{cantor1874,cantor1891}.
+The identification $\cont=2^{\alef}$ is the statement that the continuum is (in bijection with) the power set of the integers: every real in $[0,1]$ is a subset of $\N$, via its binary expansion
+\begin{equation}
+  r \;=\; \sum_{n=1}^{\infty} b_{n}\,2^{-n},\qquad b_{n}\in\{0,1\}.
+  \label{eq:binary}
+\end{equation}
+The continuum hypothesis $\mathrm{CH}$ asserts $\cont=\aleph_{1}$, i.e.\ that no cardinal sits strictly between $\alef$ and $\cont$.
+$\mathrm{CH}$ is independent of ZFC~\cite{godel1940,cohen1963}.
+Physics, in this theory, never uses an intermediate cardinal: samples are countable, completions are continuum, and nothing is sampled in between.
+That is a physical reason to regard $\mathrm{CH}$ as true \emph{for physics}, whatever its status in set theory.
+We return to this in Section~\ref{sec:ch}.
+
+\begin{proposition}[Cardinalities of the two theories]
+\label{prop:card}
+Let $\Hil$ be an infinite-dimensional separable complex Hilbert space, and let $(M,g)$ be a smooth connected Lorentzian $4$-manifold.
+Then:
+\begin{enumerate}
+  \item $\Hil$ admits a countable orthonormal basis, so the kinematic labels of QFT have cardinality $\alef$.
+  \item As a set, $\abs{\Hil}=\cont$.
+  \item $\abs{M}=\cont$, and the space $C^{\infty}(M,\mathrm{Sym}^{2}T^{*}M)$ of smooth metrics has cardinality $\cont$.
+  \item The set of finite binary strings $\{0,1\}^{*}$ has cardinality $\alef$.
+  \item The set of prefix-free programs for a fixed universal Turing machine has cardinality $\alef$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) is the definition of separability.
+(2) follows because every vector is an $\ell^{2}$ sequence of complex amplitudes and $\abs{\C^{\N}}=\cont^{\alef}=(2^{\alef})^{\alef}=2^{\alef\cdot\alef}=2^{\alef}$.
+(3): a nonempty open subset of $\R^{4}$ has cardinality $\cont$; a continuous real function on a second-countable manifold is determined by its restriction to a countable dense subset, so $\abs{C^{0}(M,\R)}\le\abs{\R^{\N}}=\cont^{\alef}=\cont$, and the smooth metrics inject into this set.
+(4) and (5) are countable unions of finite sets.
+\end{proof}
+
+The distinction in (1) versus (2) is the entire subject.
+QFT \emph{uses} a countable basis.
+Its states, as points of $\Hil$, already have cardinality $\cont$---the same cardinal as GR geometries.
+What QFT does \emph{not} have, and GR does, is a continuum of \emph{independent classical points}.
+A quantum state is a square-summable sequence.
+A spacetime is an uncountable set equipped with a smooth metric.
+The map from the first to the second is not given by the Hilbert space structure alone.
+It has to be put in by hand as a physical law.
+That law is sampling plus Einstein inflation.
+
+\subsection{Kolmogorov complexity}
+
+Let $\mathsf{U}$ be a prefix-free universal Turing machine.
+The prefix Kolmogorov complexity of a finite string $s\in\{0,1\}^{*}$ is~\cite{kolmogorov1965,chaitin1969,solomonoff1964,li2008}
+\begin{equation}
+  K(s) \;=\; \min\bigl\{\,\abs{p}\;:\; \mathsf{U}(p)=s\,\bigr\}.
+\end{equation}
+$K(s)$ is the length of the shortest program that prints $s$ and halts.
+It is uncomputable, invariant up to an additive constant under change of $\mathsf{U}$ (the invariance theorem), and it induces the Solomonoff--Levin semimeasure~\cite{solomonoff1964,levin1974}
+\begin{equation}
+  \mathbf{M}(s) \;=\; \sum_{\mathsf{U}(p)=s} 2^{-\abs{p}} \;\ge\; 2^{-K(s)}.
+  \label{eq:solomonoff}
+\end{equation}
+Kraft's inequality says $\sum_{p} 2^{-\abs{p}}\le 1$ for a prefix-free set of programs, so $\mathbf{M}$ is a semimeasure on strings: a universal Occam prior.
+Schmidhuber proposed that a theory of everything \emph{is} a choice of such a prior on universe-histories~\cite{schmidhuber2000}.
+Dzhunushaliev proposed that the probability of a gravitational configuration is $e^{-K[g]}$, and that the Einstein equation is the algorithm that reconstructs a $4$-geometry from initial data, thereby collapsing the complexity of Schwarzschild spacetime to the complexity of a single horizon radius plus the complexity of Einstein's equation~\cite{dzhunushaliev1998,dzhunushaliev2002}.
+
+Those two observations are the seed of the weight in this theory.
+What they do not yet supply is the cardinal split, the sampling map from a quantum state, or the merge.
+
+\subsection{Einstein as a compressor}
+
+The Cauchy problem of vacuum GR is locally well-posed~\cite{choquetbruhat1952,hawking1973}: a pair $(\gamma,K)$ of Riemannian $3$-metric and extrinsic curvature on a $3$-manifold $\Sigma$, satisfying the Hamiltonian and momentum constraints, determines a unique (up to diffeomorphism) maximal globally hyperbolic development $(M,g)$.
+If the data are analytic, they are fixed by a countable list of Taylor coefficients on a dense set.
+If the data are specified only to finite precision---and every sample is---they are a finite string.
+
+\begin{remark}[GR is a compressor]
+\label{rem:compressor}
+A generic smooth metric on a compact region, written to precision $\varepsilon$ in Planck units, requires a number of bits that scales with the $4$-volume.
+An Einstein solution on the same region is determined by $3$-data on a Cauchy slice, plus the Einstein equation.
+The Einstein equation is a short program.
+Therefore Einstein solutions are exponentially more compressible than generic metrics.
+This is not an analogy with Kolmogorov complexity.
+It \emph{is} Kolmogorov complexity, relative to a machine that may call an Einstein solver.
+\end{remark}
+
+Dzhunushaliev's estimate for Schwarzschild is the prototype~\cite{dzhunushaliev1998}: the whole $4$-geometry is recovered from $r_{g}/r_{\mathrm{Pl}}$ together with Einstein's equation, so
+\begin{equation}
+  K(\text{Schwarzschild}) \;\approx\; L\!\left[\Bigl(\frac{r_{g}}{r_{\mathrm{Pl}}}\Bigr)^{2}\right] + L_{\mathrm{Einstein}},
+\end{equation}
+where $L[\cdot]$ is program length for the indicated datum.
+The Bekenstein--Hawking entropy $A/4\ell_{P}^{2}$ is the natural information content of horizon data~\cite{bekenstein1973,hawking1975}.
+We will take this seriously as a theorem schema, not a coincidence (Section~\ref{sec:bh}).
+
+\section{Postulates}
+
+Five postulates.
+Nothing else is put in.
+
+\begin{postulate}[Integer quantum]
+\label{post:qft}
+The kinematical quantum state of the universe is a vector $\ket{\Omega}$ in a separable Hilbert space $\Hil$.
+There exists a countable orthonormal basis $\{\ket{e_{n}}\}_{n\in\N}$ of $\Hil$, the \emph{integer skeleton}.
+All quantum observables used in sampling are defined with respect to this skeleton or a uniformly equivalent one.
+\end{postulate}
+
+\begin{postulate}[Continuum gravity]
+\label{post:gr}
+A classical universe is a diffeomorphism class of globally hyperbolic Lorentzian $4$-manifolds with matter fields, $(M,g,\Phi)$.
+Write $\Geo$ for the space of such classes.
+$\Geo$ has cardinality $\cont$.
+The dynamics on $\Geo$ is Einstein's equation coupled to the matter whose quantum version lives in $\Hil$.
+\end{postulate}
+
+\begin{postulate}[Sampling]
+\label{post:sample}
+A sample is a finite binary string $s\in\{0,1\}^{*}$ obtained by a finite-resolution measurement of $\ket{\Omega}$ on the integer skeleton.
+The set of samples is countable.
+Each sample $s$ is interpreted as Cauchy data (geometry plus matter) to finite precision.
+The \emph{inflation map}
+\begin{equation}
+  \Gamma:\{0,1\}^{*} \;\longrightarrow\; \Geo
+\end{equation}
+sends $s$ to the maximal Einstein development of that data, or to a specified failure object if the constraints cannot be solved.
+\end{postulate}
+
+\begin{postulate}[Gravitational Kolmogorov weight]
+\label{post:weight}
+Let $\UTM$ be a prefix-free universal Turing machine whose language contains a primitive solver for the Einstein constraints and evolution (a \emph{GR-machine}).
+The gravitational Kolmogorov complexity of a sample is
+\begin{equation}
+  \KG(s) \;=\; \min\bigl\{\,\abs{p}\;:\; \UTM(p)\ \text{outputs a description of}\ \Gamma(s)\ \text{to the resolution of}\ s\,\bigr\}.
+\end{equation}
+The unnormalized weight of $s$ is
+\begin{equation}
+  w(s) \;=\; \bigl|\braket{e_{s}}{\Omega}\bigr|^{2}\, 2^{-\KG(s)},
+  \label{eq:weight}
+\end{equation}
+where $\ket{e_{s}}$ is the skeleton vector (or POVM element) that produced $s$.
+\end{postulate}
+
+\begin{postulate}[Merge]
+\label{post:merge}
+The physical universe is not a single sample.
+It is the merge of all samples against the normalized weights
+\begin{equation}
+  W(s) \;=\; \frac{w(s)}{\sum_{s'} w(s')}.
+  \label{eq:W}
+\end{equation}
+The merge has a coherent form (path integral), a decoherent form (ensemble), and a typical form (what an observer inhabits).
+All three are defined by the same countable family $\{W(s),\Gamma(s)\}$.
+\end{postulate}
+
+The cycle is Figure~\ref{fig:cycle}.
+QFT provides $\ket{\Omega}$ and the integers.
+Sampling reads a string.
+GR writes a continuum.
+$\KG$ scores the writing.
+The merge reads the scores and returns physics.
+
+\section{\texorpdfstring{Sampling: from $\alef$ to $\cont$}{Sampling: from aleph\_0 to the continuum}}
+\label{sec:sampling}
+
+\subsection{What is sampled}
+
+The vector $\ket{\Omega}$ is not itself a universe.
+It is a countable list of amplitudes.
+To obtain a universe one must extract a definite string.
+
+Let $\{E_{s}\}_{s\in\{0,1\}^{\le N}}$ be a finite-resolution POVM on $\Hil$ indexed by strings of length at most $N$, refining as $N\to\infty$ to a complete measurement in a skeleton basis.
+A sample of resolution $N$ is a draw $s$ with Born probability
+\begin{equation}
+  \mathrm{Pr}(s\mid\Omega,N) \;=\; \tr\bigl(E_{s}\,\ket{\Omega}\bra{\Omega}\bigr).
+\end{equation}
+In a rank-one skeleton measurement this is $\abs{\braket{e_{s}}{\Omega}}^{2}$.
+The resolution $N$ is Planck-scale information capacity, not an observer's laboratory precision: it is the number of bits the integer skeleton offers before inflation.
+
+The string $s$ is Cauchy data.
+Concretely, one may take $s$ to encode:
+\begin{itemize}
+  \item a finite simplicial $3$-complex, or a finite causal set, or a finite graph with holonomies (a spin network), together with
+  \item matter field values on the vertices, to a finite number of bits, and
+  \item a finite specification of lapse and shift, or a statement that they are to be solved for.
+\end{itemize}
+The theory does not prefer a discretization.
+Any countable encoding of $3$-data is a choice of skeleton.
+Uniformly equivalent encodings change $K$ by $O(1)$ and leave the merge invariant at leading exponential order.
+
+\subsection{Inflation is Cantor's map}
+
+The inflation map $\Gamma$ is the physical form of~\eqref{eq:binary}.
+A binary sequence is a real.
+A countable list of Cauchy data is a spacetime, once Einstein's equation is allowed to run.
+
+\begin{definition}[Inflation]
+If $s$ encodes constraint-satisfying data $(\gamma,K,\Phi)$ on a $3$-manifold, $\Gamma(s)$ is a representative of the diffeomorphism class of the maximal globally hyperbolic development.
+If the constraints fail, $\Gamma(s)$ is the development of the nearest constraint-satisfying projection of the data (in a fixed Sobolev metric), and the failure is charged to $\KG$ as extra program length; see~\eqref{eq:KG-split}.
+If the development is incomplete in a non-physical way (naked singularity, closed timelike curves), $\Gamma$ returns that incomplete object and $\KG$ pays for the pathology.
+\end{definition}
+
+Two structural facts make this a map $\alef\to\cont$ rather than a trick.
+
+First: the domain is countable.
+There are $\alef$ finite strings.
+There are $\alef$ programs.
+Sampling cannot emit an uncountable object.
+Whatever continuum structure a universe has, it must be \emph{generated} from a countable seed.
+
+Second: the Einstein Cauchy problem is a completion.
+It takes data on a set that can be chosen countable-dense (analytic data; or a finite net, in the finite-resolution case) and produces a metric at every point of a $4$-manifold of cardinality $\cont$.
+This is the same logical shape as completing $\Q$ to $\R$, or taking a power set.
+The continuum of GR is not an independent infinity floating beside QFT.
+It is the Cantor image of QFT's integers, under the map ``solve Einstein.''
+
+\begin{proposition}[Cantor inflation]
+\label{prop:cantor-inf}
+The image $\Gamma(\{0,1\}^{*})$ is a countable subset of $\Geo$.
+Its metric completion, in any topology in which Einstein developments of refining data converge, has cardinality at most $\cont$ and contains the classical spacetimes that finite-resolution observers can stably identify.
+\end{proposition}
+
+The physical continuum is a completion of a countable set of inflations, just as $\R$ is a completion of $\Q$.
+Generic elements of $\Geo$---metrics that are not Einstein developments of any finite string---have $\KG=\infty$ in the sense that no program of the GR-machine prints them to arbitrary resolution.
+They have Solomonoff weight zero.
+They are the non-measurable, non-computable geometries that the gravitational path integral should never have been summing over.
+
+\subsection{The quantum state of the universe}
+
+Postulate~\ref{post:qft} leaves $\ket{\Omega}$ unspecified up to the demand that it live in $\Hil$.
+A theory of everything must pick one.
+
+\begin{definition}[Kolmogorov vacuum]
+\label{def:omega}
+$\ket{\Omega}$ is a diffeomorphism-invariant state of least gravitational Kolmogorov complexity among states that admit a Fock representation of the matter fields on some Einstein background in the support of $W$.
+Equivalently, $\ket{\Omega}$ is a shortest program that prints a Hartle--Hawking no-boundary state~\cite{hartle1983}: compact Euclidean $4$-geometries with a single boundary, no other boundary.
+\end{definition}
+
+The no-boundary proposal is already a short program.
+That is why it is a candidate.
+The tunneling proposal~\cite{vilenkin1983} is another short program, of comparable length.
+The merge does not require us to decide between them at the level of postulates: both are samples, both receive weights, and $W$ concentrates on whichever is shorter once the Einstein solver is in the language.
+If they have comparable $\KG$, both survive in the decoherent merge as alternative cosmological branches.
+
+This is the sense in which the theory does not put in a wave function of the universe by hand.
+It puts in a universal machine with Einstein's equation, and $\ket{\Omega}$ is a shortest vector that machine can name.
+
+\section{\texorpdfstring{Weight: GR/$k$-complexity}{Weight: GR/k-complexity}}
+\label{sec:weight}
+
+The user of a theory of everything is entitled to one number per universe.
+That number is $w(s)$ in~\eqref{eq:weight}.
+It has two factors, and they are not independent.
+
+\subsection{The Born factor}
+
+$\abs{\braket{e_{s}}{\Omega}}^{2}$ is the quantum sampling measure.
+It is the probability that the integer skeleton, interrogated at finite resolution, returns $s$.
+Without this factor the theory would be a classical algorithmic cosmology in the style of Schmidhuber~\cite{schmidhuber2000}: possible, but silent about interference, identical particles, and the observed linearity of quantum amplitudes.
+With this factor, sampling is a measurement of $\ket{\Omega}$.
+The many worlds of Everett~\cite{everett1957} are the samples.
+The present theory adds a second weight on those worlds, and a merge.
+
+\subsection{The gravitational Kolmogorov factor}
+
+$2^{-\KG(s)}$ is Occam's razor computed on a GR-machine.
+Three comments.
+
+\paragraph{Why a GR-machine, not a bare Turing machine.}
+On a bare machine, a spacetime is a huge array of metric components, and $K(s)$ is essentially the raw bit-length of that array unless a compression happens to exist.
+Einstein's equation \emph{is} that compression, but only if the machine is allowed to use it.
+Putting the Einstein solver in the language of $\UTM$ is the statement that GR is fundamental, not emergent from a GR-blind program search.
+(If GR were itself a short program on a bare machine, the invariance theorem would absorb it into an $O(1)$ and the two choices would agree.
+If it is not, the GR-machine is a different theory, and it is the theory we mean.)
+
+\paragraph{The split of $\KG$.}
+Write, schematically,
+\begin{equation}
+  \KG(s) \;=\; K(s_{\mathrm{data}}\mid \text{Einstein}) \;+\; \frac{I_{\mathrm{off}}[\Gamma(s)]}{\hbar\ln 2} \;+\; O(1).
+  \label{eq:KG-split}
+\end{equation}
+The first term is the program length of the Cauchy data given that Einstein evolution is free.
+The second term charges constraint violation and off-shellness: $I_{\mathrm{off}}$ is a non-negative functional that vanishes on Einstein solutions and grows with $\int\abs{G_{\mu\nu}-8\pi T_{\mu\nu}}^{2}$.
+On shell, $I_{\mathrm{off}}=0$ and $\KG$ reduces to the complexity of the data plus the constant $L_{\mathrm{Einstein}}$.
+Off shell, the extra bits kill the weight exponentially.
+
+\paragraph{Action as complexity.}
+The Euclidean Einstein--Hilbert action
+\begin{equation}
+  I_{E}[g] \;=\; -\frac{1}{16\pi G}\int_{M}\!R\,\sqrt{g}\,\dd^{4}x \;-\; \frac{1}{8\pi G}\int_{\partial M}\!K\,\sqrt{h}\,\dd^{3}x
+\end{equation}
+is the continuum shadow of $\KG$.
+Hartle and Hawking assign a universe the amplitude $e^{-I_{E}/\hbar}$~\cite{hartle1983}.
+Dzhunushaliev replaces the action in the path integral by $K[g]$~\cite{dzhunushaliev1998}.
+The present theory says these are the same assignment once units are fixed by
+\begin{equation}
+  \frac{I_{E}[\Gamma(s)]}{\hbar} \;\sim\; \KG(s)\,\ln 2 \qquad \text{on the dominant saddles}.
+  \label{eq:action-K}
+\end{equation}
+This is a matching condition, not an identity for every metric.
+It is the statement that the semiclassical gravitational measure and the Solomonoff measure agree where both are reliable: on Einsteinian saddles of low complexity.
+Away from those saddles Solomonoff is the definition, and the continuum action is an approximation.
+
+\begin{proposition}[Einsteinian dominance]
+\label{prop:einstein-dom}
+Let $s_{\mathrm{E}}$ encode constraint-satisfying data of bit-length $n$, and let $s_{\mathrm{rand}}$ encode a generic metric array of the same resolution, not an Einstein development of any shorter string.
+Then
+\begin{equation}
+  \KG(s_{\mathrm{E}}) \;\le\; n + L_{\mathrm{Einstein}} + O(1), \qquad \KG(s_{\mathrm{rand}}) \;\ge\; n - O(\log n),
+\end{equation}
+and the weight ratio satisfies
+\begin{equation}
+  \frac{w(s_{\mathrm{rand}})}{w(s_{\mathrm{E}})} \;\le\; 2^{-L_{\mathrm{Einstein}}+O(\log n)}\cdot \frac{\abs{\braket{e_{s_{\mathrm{rand}}}}{\Omega}}^{2}}{\abs{\braket{e_{s_{\mathrm{E}}}}{\Omega}}^{2}}.
+\end{equation}
+If $\ket{\Omega}$ is not conspiratorially supported on random geometries, Einsteinian samples dominate the merge by a factor exponential in the program length of Einstein's equation.
+\end{proposition}
+
+That is why classical GR exists.
+It is not because the continuum was there first.
+It is because the shortest programs that print a $4$-geometry print Einstein solutions.
+
+\subsection{Normalization}
+
+The denominator of~\eqref{eq:W} is a countable sum of non-negative terms.
+It may diverge.
+If it does, one passes to a sequence of finite-resolution cutoffs $N$ (strings of length $\le N$) and takes Banach limits of the finite-$N$ weights, or equivalently uses the Solomonoff semimeasure without forcing $\sum W=1$.
+This is standard~\cite{li2008}.
+The gravitational path integral has always had a measure problem~\cite{gibbons1979}.
+Here the domain of summation is $\alef$, not $\cont$, so the only remaining issue is the possible divergence of a series of positive terms, which is an ordinary analytic problem, not a foundational one.
+
+\section{\texorpdfstring{Merge: from $\cont$ back to $\alef$}{Merge: from the continuum back to aleph\_0}}
+\label{sec:merge}
+
+Sampling produces a cloud of continuum universes, each tagged with a weight $W(s)$.
+Physics is what one does with the cloud.
+There are three consistent operations, and they are the three regimes of the theory.
+
+\subsection{Coherent merge: the $k$-integral}
+
+The coherent merge is the replacement for the gravitational path integral:
+\begin{equation}
+  Z[J] \;=\; \sum_{s\in\{0,1\}^{*}} \bigl|\braket{e_{s}}{\Omega}\bigr|^{2}\, 2^{-\KG(s)}\, \exp\Bigl(\frac{i}{\hbar}S_{\mathrm{matter}}[\Gamma(s);J]\Bigr).
+  \label{eq:Z}
+\end{equation}
+It is a countable sum.
+There is no continuum measure $\mathcal{D}g$ over metrics, no Faddeev--Popov determinant waiting on a non-existent Lebesgue measure on $\Geo$, no conformal-factor problem of the Euclidean integral as a \emph{definition} (it may reappear as a property of the dominant samples).
+The continuum is inside $\Gamma(s)$, not in the domain of summation.
+
+When $\KG$ is matched to $I_{E}$ as in~\eqref{eq:action-K} and the Born factor is slowly varying,~\eqref{eq:Z} reduces to a skeleton-regularized Hartle--Hawking integral.
+The present definition is more general: it assigns weight to off-shell samples through $\KG$, and it knows about the quantum state $\ket{\Omega}$.
+
+The effective amplitude for a coarse-grained $3$-geometry $h$ is
+\begin{equation}
+  \Psi[h] \;=\; \sum_{s:\,\Gamma(s)|_{\Sigma}\simeq h} \sqrt{w(s)}\, e^{iS[\Gamma(s)]/\hbar}.
+  \label{eq:Psi}
+\end{equation}
+This $\Psi$ is the wave function of the universe as an output, not an input.
+It is annihilated by the constraints to the extent that $\UTM$ treats diffeomorphisms as free (they do not add to $\KG$), which is the path-integral derivation of Wheeler--DeWitt~\cite{halliwell1991} rewritten in Kolmogorov language.
+
+\subsection{Decoherent merge: the ensemble}
+
+Samples that differ by a macroscopic geometry do not interfere.
+The decoherence functional of Gell-Mann and Hartle~\cite{gellmann1993} is, in this theory, a statement about $\KG$:
+\begin{equation}
+  D(s,s') \;=\; \sqrt{W(s)W(s')}\, \exp\bigl(-K(s:s')\bigr),
+\end{equation}
+where $K(s:s')$ is the mutual algorithmic information.
+When two inflations $\Gamma(s)$ and $\Gamma(s')$ have macroscopic metric differences, a short program cannot convert one into the other, $K(s:s')$ is large, and $D$ is diagonal.
+The decoherent merge is then the mixed state
+\begin{equation}
+  \rho_{\star} \;=\; \sum_{s} W(s)\, \ket{U_{s}}\bra{U_{s}}, \qquad \ket{U_{s}}\;=\;\text{a code of}\ \Gamma(s).
+  \label{eq:rho}
+\end{equation}
+Classical spacetime is a diagonal ensemble of Einsteinian inflations.
+This is also the sense in which the theory is a many-worlds theory with a preferred measure: the worlds are the samples, the measure is $W$, and the preferred basis is the one that diagonalizes $D$, i.e.\ the low-mutual-information inflations.
+
+\subsection{Typical merge: the inhabited universe}
+
+An observer does not see $\rho_{\star}$.
+An observer inhabits a single inflation $\Gamma(s_{\star})$, where $s_{\star}$ is $W$-typical:
+\begin{equation}
+  s_{\star} \;\in\; \bigl\{\,s\;:\; -\log_{2} W(s) \;\le\; \KG(s) + K(\Omega) + O(1)\,\bigr\}.
+\end{equation}
+Typicality in the Solomonoff measure is the precise form of ``the simplest universe consistent with the quantum state.''
+The inhabited geometry $\bar{g}=\Gamma(s_{\star})$ is the background of effective field theory.
+QFT, in the ordinary textbook sense, is the residual integer dynamics of $\ket{\Omega}$ in the Fock representation on $(\bar{M},\bar{g})$.
+
+Operationally, every prediction is a weighted expectation
+\begin{equation}
+  \langle\mathcal{O}\rangle \;=\; \sum_{s} W(s)\, \mathcal{O}\bigl[\Gamma(s)\bigr].
+  \label{eq:expect}
+\end{equation}
+When $W$ concentrates on a tight family of diffeomorphic Einstein solutions,~\eqref{eq:expect} is the classical value of $\mathcal{O}$ on that solution, plus QFT fluctuations from the residual state.
+When $W$ is spread (near a topology change, near a black-hole singularity, in the Planck regime),~\eqref{eq:expect} is a genuine ensemble average and classical geometry fails.
+
+\subsection{The merge returns a quantum state}
+
+The output of the merge is again an object in a separable Hilbert space: $\rho_{\star}$ in~\eqref{eq:rho}, or $\Psi$ in~\eqref{eq:Psi}.
+The cycle in Figure~\ref{fig:cycle} closes.
+This is required for consistency.
+If the merge produced a naked continuum object with no countable description, the theory would have used $\cont$ as an output while forbidding it as an input.
+Instead:
+\begin{equation}
+  \alef \;\xrightarrow{\ \Gamma\ }\; \cont \;\xrightarrow{\ W\ }\; \alef.
+\end{equation}
+The continuum is an intermediate, generated and then integrated out.
+That is what a well-defined gravitational path integral always should have been.
+
+\section{Recovery of general relativity}
+\label{sec:gr}
+
+Classical GR is the typical merge of low-$\KG$ samples.
+
+\begin{enumerate}
+  \item \textbf{Einstein's equation.}
+  Proposition~\ref{prop:einstein-dom}: the GR-machine prints Einstein developments far more cheaply than generic metrics, so $W$ concentrates on $\mathrm{Ein}(\Geo)\subset\Geo$.
+  Off-shell samples survive only at Planckian resolution, where $I_{\mathrm{off}}/\hbar$ is not large.
+
+  \item \textbf{Diffeomorphism invariance.}
+  A diffeomorphism is a change of coordinates.
+  On the GR-machine it is a free subroutine: applying a diffeomorphism to a named metric does not increase $\KG$ by more than $O(1)$ plus the complexity of the diffeomorphism itself, and the diffeomorphisms that are namable by short programs are the ones physics already treats as gauge.
+  Two samples that inflate to diffeomorphic spacetimes are identified in $\Geo$ (Postulate~\ref{post:gr}), so they are the same universe.
+
+  \item \textbf{Local well-posedness and causality.}
+  Inflation \emph{is} the Cauchy problem.
+  Globally hyperbolic developments are exactly the objects $\Gamma$ produces on shell.
+  Closed timelike curves require extra data (identifications) that increase $\KG$; they are not forbidden by fiat, they are expensive.
+
+  \item \textbf{The Einstein--Hilbert action as Hamilton--Jacobi function.}
+  On the dominant samples,~\eqref{eq:action-K} holds, so the phase of the coherent merge is the Einstein--Hilbert phase, and the WKB limit of $\Psi[h]$ is classical GR with that action.
+  Lovelock uniqueness~\cite{lovelock1971} says that in four dimensions the only second-order diffeomorphism-invariant tensor built from the metric is Einstein's.
+  A GR-machine whose Einstein solver was replaced by a higher-order PDE would have a longer program (more jets to specify) or would lose well-posedness (and then pay $I_{\mathrm{off}}$).
+  Four-dimensional Einstein gravity is the shortest well-posed compressor of $3$-data into $4$-geometry.
+
+  \item \textbf{Matter coupling.}
+  The matter content of $\Gamma(s)$ is whatever field data $s$ carried, evolved by the coupled Einstein--matter system.
+  The shortest matter programs compatible with the residual quantum state are the ones that appear in the typical universe.
+  This is not a derivation of the Standard Model.
+  It is a statement of what would count as a derivation: a demonstration that the Standard Model Lagrangian is a shortest matter plugin for $\UTM$ consistent with $\ket{\Omega}$ and with the observed low-energy sample.
+\end{enumerate}
+
+\section{Recovery of quantum field theory}
+\label{sec:qft}
+
+QFT is the integer theory on a merged background.
+
+Fix a typical inhabited geometry $(\bar{M},\bar{g})=\Gamma(s_{\star})$.
+The residual quantum state is the condition of $\ket{\Omega}$ on the skeleton, given $s_{\star}$.
+In a neighbourhood of $s_{\star}$ in which inflation produces geometries in which a Fock representation exists (Hadamard states on globally hyperbolic backgrounds~\cite{wald1994,kay1991}), this residual state \emph{is} a QFT state of the matter fields, and of gravitons as linearized excitations of $\bar{g}$.
+
+\begin{enumerate}
+  \item \textbf{Particles are integers.}
+  Occupation numbers, species indices, momenta in a box: $\alef$.
+  There is no continuum of particle types because a continuum of types would be a $\cont$-sized label set, which sampling cannot emit.
+  A ``continuous spin'' or a continuous family of species can appear only as a classical limit of many discrete samples.
+
+  \item \textbf{Fields are continuum completions.}
+  A quantum field operator is indexed by test functions on $\bar{M}$, and $\bar{M}$ has cardinality $\cont$.
+  This is inflation again: the field as a distribution is the GR-plus-matter completion of countable mode data.
+  The notorious infinities of QFT are $\alef$-sums (mode sums, loop momenta on a lattice going to infinity) pretending to be $\cont$-integrals without having passed through the merge.
+  The merge caps them.
+
+  \item \textbf{Ultraviolet divergences and holography.}
+  A local QFT Hilbert space is infinite-dimensional because a region of continuum spacetime supports $\alef$ modes.
+  Gravity does not permit this.
+  The Bekenstein bound and its covariant forms~\cite{bekenstein1981,bousso1999}, and the independent argument that a local region in quantum gravity has finite-dimensional Hilbert space~\cite{bao2017}, say that a region of boundary area $A$ supports at most $A/4\ell_{P}^{2}$ independent bits.
+  In the present theory that statement is the assertion
+  \begin{equation}
+    \KG(s|_{R}) \;\le\; \frac{A(\partial R)}{4\ell_{P}^{2}} + O(\log A).
+    \label{eq:holo}
+  \end{equation}
+  A sample that tries to specify more independent data in $R$ than the area allows either inflates to a geometry in which $R$ has already collapsed to a black hole (and the extra data are behind a horizon, charged to a different region), or it is not a shortest program and is exponentially downweighted.
+  The continuum interior of $R$ is a $\Gamma$-completion of a countable boundary code of length $\sim A/4\ell_{P}^{2}$.
+  That is holography~\cite{tHooft1993,susskind1995,maldacena1998} as Cantor inflation with a Kraft bound.
+
+  \item \textbf{The Born rule.}
+  Laboratory Born frequencies are the $W$-weights of samples that differ only in a small subsystem, with the environment and the geometry held fixed.
+  For those samples $\KG$ is essentially constant (the extra bits specifying which detector clicked are $O(1)$ compared with the complexity of the apparatus), so $W(s)\propto\abs{\psi_{s}}^{2}$.
+  Corrections are considered in Section~\ref{sec:predictions}.
+
+  \item \textbf{QFT in curved spacetime.}
+  The typical background $\bar{g}$ need not be Minkowski.
+  The residual state on $\bar{g}$ is ordinary QFT in curved spacetime~\cite{birrell1982,wald1994}.
+  Hawking radiation is the residual integer dynamics on a collapsing typical sample~\cite{hawking1975}.
+  Inflationary perturbations are the residual dynamics on a typical inflating sample~\cite{mukhanov1992}.
+\end{enumerate}
+
+\section{Black holes}
+\label{sec:bh}
+
+A Schwarzschild sample of mass $M$ is a very short string: one real number $r_{g}=2GM$, plus Einstein's equation, plus a statement of vacuum and spherical symmetry~\cite{dzhunushaliev1998}.
+Spherical symmetry is itself a short program (``all points at radius $r$ are equivalent'').
+Hence Schwarzschild, Kerr, and FLRW are not generic points of $\Geo$.
+They are the Kolmogorov elite.
+That is why they are the first solutions anyone writes down, and why they dominate the merge among macroscopic isolated objects.
+
+The horizon is the place where the integer skeleton of the exterior ends.
+A sample of the exterior of a black hole of area $A$ cannot cheaply specify independent interior data beyond $A/4\ell_{P}^{2}$ bits:~\eqref{eq:holo} applied to the exterior region.
+The gravitational Kolmogorov complexity of the hole, as an object in the merge, is therefore
+\begin{equation}
+  \KG(\text{BH of area }A) \;=\; \frac{A}{4\ell_{P}^{2}} + L_{\mathrm{Einstein}} + K(\text{charges, angular momenta}) + O(\log A).
+  \label{eq:KBH}
+\end{equation}
+The first term is Bekenstein--Hawking entropy~\cite{bekenstein1973,hawking1975,gibbons1977}.
+In this theory it is not a thermodynamic analogy.
+It is the program length of the shortest GR-machine description of the hole.
+
+The decoherent merge of samples that agree on the exterior and differ on the interior by up to $e^{A/4\ell_{P}^{2}}$ bits is a mixed state of von Neumann entropy $A/4\ell_{P}^{2}$.
+That mixed state is the Hawking radiation thermal state, viewed from the outside.
+Information is not lost in the coherent merge: the coherent sum~\eqref{eq:Z} still contains the interior samples.
+It is lost, operationally, in the decoherent merge, because $K(s_{\mathrm{ext}}:s_{\mathrm{int}})$ is large and the off-diagonal terms in $D$ vanish.
+Unitary evaporation is the statement that at late times a new family of samples---the radiation---becomes a shortest description of the same universe, with $\KG$ matching~\eqref{eq:KBH}.
+Whether that matching is exact (no firewall, no remnant) is a question about the GR-machine's shortest programs for evaporating geometries, not a question that has to be settled before the theory can be stated.
+
+\section{Cosmology and the arrow of time}
+\label{sec:cosmo}
+
+\subsection{The typical cosmos}
+
+A typical sample under $W$ has:
+\begin{itemize}
+  \item short Cauchy data (low $K(s_{\mathrm{data}})$),
+  \item on-shell Einstein inflation ($I_{\mathrm{off}}=0$),
+  \item a residual quantum state close to the Kolmogorov vacuum.
+\end{itemize}
+Short, constraint-satisfying, homogeneous data on a $3$-sphere or a torus, plus a short inflaton potential, are extremely cheap programs that inflate to large, smooth, approximately FLRW universes.
+This is why the observed cosmos is large, smooth, and approximately isotropic.
+It is not because a continuum of initial conditions was fine-tuned.
+It is because the alternatives are longer programs.
+
+Inflation is preferred as a compressor: a few e-folds of a short potential convert Planckian data into a vast Einsteinian region, which would otherwise have to be specified bit by bit.
+Too much inflation, of a kind that requires a long fine-tuned potential or an enormous number of named e-folds, costs $\KG$.
+The measure $W$ therefore favours a moderate inflating family, in the same qualitative direction as the Hartle--Hawking measure~\cite{hartle2008} and opposite to volume-weighting that rewards $10^{10^{10}}$ e-folds.
+A quantitative $N_{e}$ is a computation of $\KG$ for concrete inflaton plugins; it is not settled by the postulates.
+
+\subsection{The cosmological constant}
+
+A generic vacuum energy is an incompressible real: specifying $\Lambda$ to $N$ bits costs $N$ bits.
+A vacuum energy that is a short program---$0$, or a topological invariant, or a ratio of two short geometric quantities---is cheap.
+The typical merge therefore does not produce a Planck-scale cosmological constant as a random QFT zero-point sum.
+That sum is an $\alef$-divergence that the merge never performs (Section~\ref{sec:qft}).
+What it produces is a $\Lambda$ with a short description, possibly zero, possibly the residual of a short compactification, possibly the smallest nonzero value namable by the matter plugin.
+The observed value $\Lambda\sim 10^{-122}$ in Planck units is a $122$-bit number and is \emph{not} short as a raw integer.
+The theory's claim is that the shortest program for the observed $\Lambda$ is not ``print this $122$-bit integer'' but a short geometric or vacuum-structure program whose output happens to be that integer.
+If no such program exists, the observed $\Lambda$ is a genuine cost, and the typicality of our sample has to be paid for elsewhere (anthropic conditioning on the residual state, which the theory permits but does not advertise).
+
+\subsection{The arrow of time}
+
+Kolmogorov complexity of a typical inhabited universe, as a function of Cauchy time, is low on the initial slice---that is what ``typical under $W$'' means---and high later, because Einstein evolution of even short data produces geometrically rich $4$-regions whose uncompressed description is long.
+The algorithmic entropy of the slice~\cite{zurek1989} increases.
+That is the arrow of time.
+It does not require a special postulate about past hypotheses beyond the statement that $W$ itself is the past hypothesis: the measure is supported on short data.
+
+Boltzmann brains are long incompressible strings that fluctuate into existence in a typical late-time geometry.
+Their $\KG$ is of order their own bit-length, so $W$ suppresses them exponentially relative to ordinary cosmological observers, who are cheap by-products of a short inflating program~\cite{carroll2017}.
+This is the standard algorithmic resolution, now sitting on the same weight that defines the theory.
+
+\section{The continuum hypothesis, physically}
+\label{sec:ch}
+
+Sampling emits elements of a countable set.
+Inflation produces objects of cardinality $\cont$.
+The merge sums over a countable index.
+No construction in the theory produces a set of cardinality $\kappa$ with $\alef<\kappa<\cont$.
+
+\begin{proposition}[Physical CH]
+\label{prop:ch}
+Every set that the $k$-cycle constructs from $\ket{\Omega}$ by sampling, inflation, weighting, and merging is either finite, of cardinality $\alef$, or of cardinality $\cont$ (or, if one takes power sets of geometries, of cardinality $2^{\cont}$, which the cycle never samples).
+In particular the theory has no physical use for a cardinal strictly between $\alef$ and $\cont$.
+\end{proposition}
+
+This is not a proof of $\mathrm{CH}$ in ZFC, which is impossible~\cite{godel1940,cohen1963}.
+It is a statement that physics, if it is this theory, is a model of set theory in which the only infinite cardinals that occur as types of physical objects are $\alef$ and $\cont$.
+Intermediate cardinals, if they exist, are empirically idle.
+That is the strongest physical meaning $\mathrm{CH}$ can have.
+
+It is also a diagnosis of a class of failed unifications.
+A theory that quantizes GR by putting a Hilbert space of dimension $\cont$ (a non-separable kinematical space of ``all metrics'') on top of the continuum, without a sampling map back to $\alef$, has used a cardinal that QFT does not know how to measure.
+Loop quantum gravity's kinematical Hilbert space is non-separable in the standard construction and becomes separable once diffeomorphism moduli are treated as unphysical~\cite{fairbairn2004}; that move is, in the present language, a refusal to treat a $\cont$-sized label set as quantum kinematics.
+The refusal is correct.
+
+\section{What the theory is not}
+
+It is not a derivation of the Standard Model spectrum, gauge group, or three generations.
+Those are matter plugins to $\UTM$.
+The theory says how a plugin is weighted, not which plugin is shortest.
+
+It is not a claim that Kolmogorov complexity is computable, or that observers compute $\KG$ in order to exist.
+$W$ is a defining measure, as the Euclidean action is a defining measure in Hartle--Hawking.
+Predictions that require the exact value of $K$ are not available; predictions that require only crude bounds (Einsteinian dominance, holographic caps, shortness of Schwarzschild, suppression of Boltzmann brains) are.
+
+It is not hypercomputation.
+The GR-machine is a Turing machine with an Einstein primitive.
+If that primitive is itself Turing-computable (numerical GR to finite resolution, which is all sampling ever needs), $\UTM$ is an ordinary UTM and $\KG$ differs from $K$ by $O(1)$.
+The continuum is never computed pointwise.
+It is named by a program that \emph{refers} to an Einstein development.
+
+It is not, despite the countable sums, a causal-set theory~\cite{bombelli1987}, a CDT theory~\cite{ambjorn2005}, or a Wolfram model~\cite{wolfram2020}, although each of those is a legitimate choice of integer skeleton.
+The ontology is the pair $(\Hil,\Geo)$ with maps $\Gamma$ and $W$, not a particular discretization.
+
+It is not a solution of Gödel--Chaitin incompleteness~\cite{chaitin1974,faizal2025}.
+$\KG$ is uncomputable, $\ket{\Omega}$ is named but not constructed, and there will be physical questions whose answers are not theorems of any recursive axiomatization of the GR-machine.
+The theory is complete as an ontology and a measure.
+It is incomplete as a decision procedure.
+That is the correct amount of completeness for a theory that takes Kolmogorov complexity as fundamental.
+
+\section{Predictions and tests}
+\label{sec:predictions}
+
+A theory of everything earns the name by recovering the two existing theories and then saying something they do not.
+The recoveries are Sections~\ref{sec:gr}--\ref{sec:cosmo}.
+The extras are these.
+
+\paragraph{1. The gravitational path integral is a countable sum.}
+Any continuum measure $\mathcal{D}g$ is an approximation to~\eqref{eq:Z}, valid on Einsteinian saddles and nowhere a definition.
+Practical consequence: lattice, spin-foam, and causal-dynamical-triangulation sums are closer to the definition than continuum Euclidean integrals are.
+Their continuum limits, when they exist, are inflations, not domains of integration.
+
+\paragraph{2. A complexity correction to Born frequencies.}
+For two laboratory outcomes $a,b$ of a measurement on a small system,
+\begin{equation}
+  \frac{W(a)}{W(b)} \;=\; \frac{\abs{\psi_{a}}^{2}}{\abs{\psi_{b}}^{2}}\, 2^{-\bigl(\KG(a)-\KG(b)\bigr)}.
+  \label{eq:born-corr}
+\end{equation}
+In a laboratory whose environment has already contributed $\sim 10^{23}$ bits to $\KG$, the difference $\KG(a)-\KG(b)$ is $O(1)$ and the correction is unobservable.
+In a fully specified, isolated, few-qubit device whose total $\KG$ is dominated by the register, a systematic bias toward the lower-complexity outcome is in principle present.
+This is the most direct empirical signature the theory has, and the easiest to overclaim.
+It should be looked for only in experiments where the Kolmogorov complexity of the two branches can be bounded independently of the Born weights (for example, one branch is a short computational history and the other is an incompressible dump).
+
+\paragraph{3. Holographic, not field-theoretic, vacuum energy.}
+Zero-point sums are not performed.
+The residual $\Lambda$ is a short program's output, and the UV cutoff of matter loops in a region is the area bound~\eqref{eq:holo}, not a cutoff in momenta of a continuum of modes.
+This is already the standard holographic expectation~\cite{tHooft1993,bao2017}; here it is a theorem of the merge.
+
+\paragraph{4. Moderate inflation, simple potentials.}
+The measure $W$ rewards inflaton plugins that are short programs producing enough e-folds to solve the horizon problem, and penalizes both no inflation (long data on a large slice) and baroque landscapes named pointwise.
+A single-field monomial or exponential of low degree is favoured over a random $10^{500}$-vacuum list unless the list itself has a short generator.
+This is a selection principle on the landscape, not a unique potential.
+
+\paragraph{5. Macroscopic solutions are Kolmogorov-elite.}
+The observed catalogue---Kerr, FLRW, gravitational waves as linearized Einstein radiation, no naked singularities---is the catalogue of short GR-machine programs.
+A stable, macroscopic, non-Einstein, non-diffeomorphic-to-Einstein geometry would falsify Einsteinian dominance (Proposition~\ref{prop:einstein-dom}) and so falsify the theory.
+
+\paragraph{6. No physical intermediate cardinals, no non-separable kinematics.}
+A compelling empirical role for a non-separable Hilbert space, or for a physical observable whose spectrum has cardinality strictly between $\alef$ and $\cont$, would falsify Postulates~\ref{post:qft}--\ref{post:sample}.
+(Continuous spectra of ordinary operators are not a counterexample: they are $\cont$-sized, and they arise as inflations of countable spectral data, as in the spectral theorem for $L^{2}(\R)$.)
+
+\paragraph{7. Black-hole entropy is program length.}
+Any microscopic counting of black-hole states that does not, at leading order, reproduce~\eqref{eq:KBH} as a Kolmogorov bound is counting something other than the weight the merge uses.
+Agreement of string, loop, and Euclidean calculations with $A/4\ell_{P}^{2}$ is, on this view, agreement that those calculations are enumerating shortest GR-machine descriptions.
+
+\section{Related work}
+
+The theory sits at a crossing that several programs have approached from one side.
+
+\paragraph{Algorithmic cosmologies.}
+Solomonoff's universal prior~\cite{solomonoff1964}, Levin's semimeasure~\cite{levin1974}, and Schmidhuber's algorithmic theories of everything~\cite{schmidhuber2000} put $2^{-K}$ on universe-histories.
+They do not put QFT and GR at two Cantorian infinities, they do not inflate samples with the Einstein Cauchy problem, and they do not merge.
+M\"uller's algorithmic idealism~\cite{mueller2017,mueller2024} starts from observer states and Solomonoff prediction; the present theory starts from $\ket{\Omega}$ and a GR-machine, and treats observers as typical samples.
+
+\paragraph{Complexity in quantum gravity.}
+Dzhunushaliev's identification of gravitational probability with $e^{-K[g]}$, his rewriting of the path integral, and his Schwarzschild estimate~\cite{dzhunushaliev1998,dzhunushaliev2002} are the nearest ancestors of Postulate~\ref{post:weight}.
+The present theory adds the cardinal split, the sampling of a separable $\ket{\Omega}$, the three merges, and the identification of holography with a Kraft bound on $\KG$.
+Nielsen (circuit) complexity and Krylov complexity in cosmology~\cite{bhattacharyya2020,nielsen2006} are different quantities: they measure depth of a unitary, not program length of a universe.
+They may bound $\KG$ in special states; they do not replace it.
+
+\paragraph{Quantum cosmology.}
+The Hartle--Hawking no-boundary state~\cite{hartle1983}, Vilenkin's tunneling state~\cite{vilenkin1983}, and decoherent histories~\cite{gellmann1993,hartle2008} are the coherent and decoherent merges in a different language, with $I_{E}$ in place of $\KG$.
+The present theory claims that $I_{E}$ is the continuum shadow of $\KG$ on saddles, and that the sum is over programs, not over a continuum of metrics.
+
+\paragraph{Holography and finite-dimensional gravity.}
+'t~Hooft, Susskind, Maldacena~\cite{tHooft1993,susskind1995,maldacena1998}; Bousso's bound~\cite{bousso1999}; Bao, Carroll, and Singh's locally finite-dimensional Hilbert space~\cite{bao2017}.
+Equation~\eqref{eq:holo} is that circle of ideas stated as a bound on gravitational Kolmogorov complexity of a sample.
+
+\paragraph{Discrete quantum gravity.}
+Causal sets~\cite{bombelli1987}, CDT~\cite{ambjorn2005}, loop quantum gravity~\cite{rovelli2004,fairbairn2004}, and spin foams are candidate integer skeletons and candidate inflation maps.
+The present theory is agnostic among them so long as $\Gamma$ is an Einstein completion and $\Hil$ is separable.
+
+\paragraph{Cantorian spacetime.}
+El Naschie's $E$-infinity Cantorian spacetime~\cite{elnaschie2004} uses transfinite Cantor sets as a model of spacetime and is a different project: it replaces the manifold, rather than treating the manifold as an inflation of an integer quantum skeleton.
+
+\section{A discrete analog}
+
+The $k$-cycle can be run in miniature, with no claim that the miniature is gravity.
+
+Let $\Hil=\C^{2^{n}}$ with the computational basis $\{\ket{s}:s\in\{0,1\}^{n}\}$ as integer skeleton.
+Let $\ket{\Omega}$ be a state of low circuit complexity (a short-program state).
+Sampling is a computational-basis measurement, producing a bitstring $s$ of length $n$.
+Inflation $\Gamma$ is, in the analog, the discrete Poisson problem---the nearest cousin of a constraint equation---or simply the identification of $s$ with a classical spin configuration on a cycle of length $n$.
+Gravitational Kolmogorov complexity is approximated by
+\begin{equation}
+  \widehat{\KG}(s) \;=\; \ell_{\mathrm{gz}}(s) \;+\; \beta\, E_{\mathrm{smooth}}(s),
+\end{equation}
+where $\ell_{\mathrm{gz}}$ is the compressed length of $s$ (a computable upper bound on $K$) and $E_{\mathrm{smooth}}=\sum_{i}(s_{i+1}-s_{i})^{2}$ is a discrete curvature penalty, the analog of $I_{\mathrm{off}}$.
+Weights $W(s)\propto\abs{\braket{s}{\Omega}}^{2}\,2^{-\widehat{\KG}(s)}$ are formed, and the merge is the weighted barycentre $\bar{s}=\sum_{s}W(s)\,s$ in $[0,1]^{n}$, or the typical sample.
+
+Three things happen, and they are the three things the continuum theory claims.
+Low-complexity, smooth strings dominate.
+The merge is a finite sum.
+The output is again a vector in a separable space (here finite-dimensional).
+A companion program in this repository runs that analog.
+
+The analog is also a warning.
+Gzip is not $K$, a cycle graph is not Einstein, and $n<\infty$ erases the cardinal split.
+What survives is the shape of the cycle: sample from a quantum state, score by compression plus a geometric penalty, merge.
+
+\section{Open problems}
+
+\begin{enumerate}
+  \item \textbf{The Einstein primitive.}
+  Specify the GR-machine in enough detail that $L_{\mathrm{Einstein}}$ is a definite (if enormous) integer, and prove a precise version of~\eqref{eq:action-K} for Euclidean saddles.
+
+  \item \textbf{Uniqueness of $\Gamma$.}
+  Different discretizations of Cauchy data give different maps $\Gamma$.
+  Prove that their merges agree on all diffeomorphism-invariant coarse observables in the $\hbar\to 0$, $N\to\infty$ limit.
+
+  \item \textbf{The Kolmogorov vacuum.}
+  Construct, or at least uniquely characterize, $\ket{\Omega}$ as a shortest diffeomorphism-invariant state.
+  Decide the no-boundary versus tunneling contest as a $\KG$ comparison.
+
+  \item \textbf{Standard Model as plugin.}
+  State a precise minimization problem whose solution would \emph{be} the Standard Model: a shortest matter Lagrangian, in a fixed encoding of field theories, compatible with a given low-energy sample.
+
+  \item \textbf{Evaporation.}
+  Compute, in a controlled analog or a minisuperspace model, whether $\KG$ of an evaporating hole plus radiation remains equal to $A_{\mathrm{initial}}/4\ell_{P}^{2}$ along the history.
+  This is the information problem as a problem in gravitational Kolmogorov complexity.
+
+  \item \textbf{Complexity corrections.}
+  Bound $\KG(a)-\KG(b)$ in a concrete few-qubit interferometer and say whether~\eqref{eq:born-corr} is experimentally accessible.
+
+  \item \textbf{Dimensionality.}
+  Show that $3+1$ is the shortest well-posed Einstein compressor, in the sense of Dzhunushaliev's complexity-driven dimensional reduction~\cite{dzhunushaliev1998,dzhunushaliev2002} made into a theorem about $\KG$.
+\end{enumerate}
+
+\section{The theory in one page}
+
+Cantor split physics into two infinities before physics knew it needed them.
+The integers index quantum states.
+The reals index spacetime.
+The reals are the power set of the integers, so a universe is a subset of the quantum skeleton, completed by Einstein's equation.
+
+Sample a finite string from $\ket{\Omega}$.
+Inflate it with GR to a continuum geometry.
+Weight it by $2^{-\KG}$ times its Born factor, where $\KG$ is Kolmogorov complexity on a machine that already knows Einstein.
+Merge the weighted cloud.
+The merge is a countable sum.
+Classical spacetime is the typical term.
+Quantum field theory is the integer residue.
+Holography is Kraft's inequality on a region of finite area.
+Black-hole entropy is program length.
+The arrow of time is the unfolding of a short program.
+The gravitational path integral was never an integral over the continuum.
+It was always this sum.
+
+That is a theory of everything in the only sense the phrase can bear.
+It names the ontology, the measure, and the maps between the two infinities the twentieth century actually used.
+It recovers GR as Einsteinian dominance of the merge, and QFT as residual integer dynamics.
+It leaves the Standard Model as a shortest-plugin problem, $\KG$ as uncomputable, and $\ket{\Omega}$ as a shortest vector rather than a constructed one.
+Those are debts.
+They are debts of the right shape.
+
+\begin{thebibliography}{99}
+
+\bibitem{ambjorn2005}
+J.~Ambj{\o}rn, J.~Jurkiewicz, and R.~Loll,
+``Reconstructing the universe,''
+Phys.\ Rev.\ D \textbf{72}, 064014 (2005).
+
+\bibitem{bao2017}
+N.~Bao, S.~M.~Carroll, and A.~Singh,
+``The Hilbert space of quantum gravity is locally finite-dimensional,''
+Int.\ J.\ Mod.\ Phys.\ D \textbf{26}, 1743013 (2017),
+arXiv:1704.00066.
+
+\bibitem{bekenstein1973}
+J.~D.~Bekenstein,
+``Black holes and entropy,''
+Phys.\ Rev.\ D \textbf{7}, 2333 (1973).
+
+\bibitem{bekenstein1981}
+J.~D.~Bekenstein,
+``Universal upper bound on the entropy-to-energy ratio for bounded systems,''
+Phys.\ Rev.\ D \textbf{23}, 287 (1981).
+
+\bibitem{bhattacharyya2020}
+A.~Bhattacharyya, S.~Das, S.~Shajidul Haque, and B.~Underwood,
+``Cosmological complexity,''
+Phys.\ Rev.\ D \textbf{101}, 106020 (2020).
+
+\bibitem{birrell1982}
+N.~D.~Birrell and P.~C.~W.~Davies,
+\textit{Quantum Fields in Curved Space}
+(Cambridge University Press, Cambridge, 1982).
+
+\bibitem{bombelli1987}
+L.~Bombelli, J.~Lee, D.~Meyer, and R.~D.~Sorkin,
+``Space-time as a causal set,''
+Phys.\ Rev.\ Lett.\ \textbf{59}, 521 (1987).
+
+\bibitem{bousso1999}
+R.~Bousso,
+``A covariant entropy conjecture,''
+JHEP \textbf{07}, 004 (1999).
+
+\bibitem{cantor1874}
+G.~Cantor,
+``\"Uber eine Eigenschaft des Inbegriffes aller reellen algebraischen Zahlen,''
+J.\ Reine Angew.\ Math.\ \textbf{77}, 258 (1874).
+
+\bibitem{cantor1878}
+G.~Cantor,
+``Ein Beitrag zur Mannigfaltigkeitslehre,''
+J.\ Reine Angew.\ Math.\ \textbf{84}, 242 (1878).
+
+\bibitem{cantor1891}
+G.~Cantor,
+``\"Uber eine elementare Frage der Mannigfaltigkeitslehre,''
+Jahresber.\ Dtsch.\ Math.-Ver.\ \textbf{1}, 75 (1891).
+
+\bibitem{carroll2017}
+S.~M.~Carroll,
+``Why Boltzmann brains are bad,''
+arXiv:1702.00850.
+
+\bibitem{chaitin1969}
+G.~J.~Chaitin,
+``On the length of programs for computing finite binary sequences: statistical considerations,''
+J.\ ACM \textbf{16}, 145 (1969).
+
+\bibitem{chaitin1974}
+G.~J.~Chaitin,
+``Information-theoretic limitations of formal systems,''
+J.\ ACM \textbf{21}, 403 (1974).
+
+\bibitem{choquetbruhat1952}
+Y.~Foures-Bruhat,
+``Th\'eor\`eme d'existence pour certains syst\`emes d'\'equations aux d\'eriv\'ees partielles non lin\'eaires,''
+Acta Math.\ \textbf{88}, 141 (1952).
+
+\bibitem{cohen1963}
+P.~J.~Cohen,
+``The independence of the continuum hypothesis,''
+Proc.\ Natl.\ Acad.\ Sci.\ USA \textbf{50}, 1143 (1963).
+
+\bibitem{dzhunushaliev1998}
+V.~D.~Dzhunushaliev,
+``Kolmogorov's algorithmic complexity and its probability interpretation in quantum gravity,''
+Class.\ Quantum Grav.\ \textbf{15}, 603 (1998),
+arXiv:gr-qc/9512014.
+
+\bibitem{dzhunushaliev2002}
+V.~Dzhunushaliev and D.~Singleton,
+``Algorithmic complexity in cosmology and quantum gravity,''
+Entropy \textbf{4}, 3 (2002),
+arXiv:gr-qc/0108038.
+
+\bibitem{elnaschie2004}
+M.~S.~El Naschie,
+``A review of $E$-infinity theory and the mass spectrum of high energy particle physics,''
+Chaos Solitons Fractals \textbf{19}, 209 (2004).
+
+\bibitem{everett1957}
+H.~Everett, III,
+`` `Relative state' formulation of quantum mechanics,''
+Rev.\ Mod.\ Phys.\ \textbf{29}, 454 (1957).
+
+\bibitem{fairbairn2004}
+W.~Fairbairn and C.~Rovelli,
+``Separable Hilbert space in loop quantum gravity,''
+J.\ Math.\ Phys.\ \textbf{45}, 2802 (2004),
+arXiv:gr-qc/0403047.
+
+\bibitem{faizal2025}
+M.~Faizal, L.~Krauss, A.~Shabir, and F.~Marino,
+``Consequences of undecidability in physics on the theory of everything,''
+arXiv:2507.22950.
+
+\bibitem{gellmann1993}
+M.~Gell-Mann and J.~B.~Hartle,
+``Classical equations for quantum systems,''
+Phys.\ Rev.\ D \textbf{47}, 3345 (1993).
+
+\bibitem{gibbons1977}
+G.~W.~Gibbons and S.~W.~Hawking,
+``Action integrals and partition functions in quantum gravity,''
+Phys.\ Rev.\ D \textbf{15}, 2752 (1977).
+
+\bibitem{gibbons1979}
+G.~W.~Gibbons, S.~W.~Hawking, and M.~J.~Perry,
+``Path integrals and the indefiniteness of the gravitational action,''
+Nucl.\ Phys.\ B \textbf{138}, 141 (1979).
+
+\bibitem{godel1940}
+K.~G\"odel,
+\textit{The Consistency of the Continuum Hypothesis}
+(Princeton University Press, Princeton, 1940).
+
+\bibitem{halmos1974}
+P.~R.~Halmos,
+\textit{Naive Set Theory}
+(Springer, New York, 1974).
+
+\bibitem{halliwell1991}
+J.~J.~Halliwell and J.~B.~Hartle,
+``Wave functions constructed from an invariant sum over histories satisfy constraints,''
+Phys.\ Rev.\ D \textbf{43}, 1170 (1991).
+
+\bibitem{hartle1983}
+J.~B.~Hartle and S.~W.~Hawking,
+``Wave function of the universe,''
+Phys.\ Rev.\ D \textbf{28}, 2960 (1983).
+
+\bibitem{hartle2008}
+J.~B.~Hartle, S.~W.~Hawking, and T.~Hertog,
+``The classical universes of the no-boundary quantum state,''
+Phys.\ Rev.\ D \textbf{77}, 023502 (2008).
+
+\bibitem{hawking1973}
+S.~W.~Hawking and G.~F.~R.~Ellis,
+\textit{The Large Scale Structure of Space-Time}
+(Cambridge University Press, Cambridge, 1973).
+
+\bibitem{hawking1975}
+S.~W.~Hawking,
+``Particle creation by black holes,''
+Commun.\ Math.\ Phys.\ \textbf{43}, 199 (1975).
+
+\bibitem{kay1991}
+B.~S.~Kay and R.~M.~Wald,
+``Theorems on the uniqueness and thermal properties of stationary, nonsingular, quasifree states on spacetimes with a bifurcate Killing horizon,''
+Phys.\ Rep.\ \textbf{207}, 49 (1991).
+
+\bibitem{kolmogorov1965}
+A.~N.~Kolmogorov,
+``Three approaches to the quantitative definition of information,''
+Probl.\ Inf.\ Transm.\ \textbf{1}, 1 (1965).
+
+\bibitem{levin1974}
+L.~A.~Levin,
+``Laws of information conservation (nongrowth) and aspects of the foundation of probability theory,''
+Probl.\ Inf.\ Transm.\ \textbf{10}, 206 (1974).
+
+\bibitem{li2008}
+M.~Li and P.~Vit\'anyi,
+\textit{An Introduction to Kolmogorov Complexity and Its Applications}, 3rd~ed.
+(Springer, New York, 2008).
+
+\bibitem{lovelock1971}
+D.~Lovelock,
+``The Einstein tensor and its generalizations,''
+J.\ Math.\ Phys.\ \textbf{12}, 498 (1971).
+
+\bibitem{maldacena1998}
+J.~Maldacena,
+``The large $N$ limit of superconformal field theories and supergravity,''
+Adv.\ Theor.\ Math.\ Phys.\ \textbf{2}, 231 (1998).
+
+\bibitem{mueller2017}
+M.~P.~M\"uller,
+``Law without law: from observer states to physics via algorithmic information theory,''
+arXiv:1712.01826.
+
+\bibitem{mueller2024}
+M.~P.~M\"uller,
+``Algorithmic idealism: what should you believe to experience next?,''
+arXiv:2412.02826.
+
+\bibitem{mukhanov1992}
+V.~F.~Mukhanov, H.~A.~Feldman, and R.~H.~Brandenberger,
+``Theory of cosmological perturbations,''
+Phys.\ Rep.\ \textbf{215}, 203 (1992).
+
+\bibitem{nielsen2006}
+M.~A.~Nielsen,
+``A geometric approach to quantum circuit complexity,''
+Science \textbf{311}, 1133 (2006); quant-ph/0502070.
+
+\bibitem{rovelli2004}
+C.~Rovelli,
+\textit{Quantum Gravity}
+(Cambridge University Press, Cambridge, 2004).
+
+\bibitem{schmidhuber2000}
+J.~Schmidhuber,
+``Algorithmic theories of everything,''
+arXiv:quant-ph/0011122.
+
+\bibitem{solomonoff1964}
+R.~J.~Solomonoff,
+``A formal theory of inductive inference, I and II,''
+Inf.\ Control \textbf{7}, 1 (1964); \textbf{7}, 224 (1964).
+
+\bibitem{susskind1995}
+L.~Susskind,
+``The world as a hologram,''
+J.\ Math.\ Phys.\ \textbf{36}, 6377 (1995).
+
+\bibitem{tHooft1993}
+G.~'t~Hooft,
+``Dimensional reduction in quantum gravity,''
+in \textit{Salamfestschrift},
+ed.\ A.~Ali, J.~Ellis, and S.~Randjbar-Daemi
+(World Scientific, Singapore, 1993),
+arXiv:gr-qc/9310026.
+
+\bibitem{vilenkin1983}
+A.~Vilenkin,
+``Birth of inflationary universes,''
+Phys.\ Rev.\ D \textbf{27}, 2848 (1983).
+
+\bibitem{wald1994}
+R.~M.~Wald,
+\textit{Quantum Field Theory in Curved Spacetime and Black Hole Thermodynamics}
+(University of Chicago Press, Chicago, 1994).
+
+\bibitem{wolfram2020}
+S.~Wolfram,
+\textit{A Project to Find the Fundamental Theory of Physics}
+(Wolfram Media, Champaign, 2020).
+
+\bibitem{zurek1989}
+W.~H.~Zurek,
+``Algorithmic randomness and physical entropy,''
+Phys.\ Rev.\ A \textbf{40}, 4731 (1989).
+
+\end{thebibliography}
+
+\end{document}

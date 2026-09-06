@@ -1,0 +1,46 @@
+# LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*-blx.bib
+*.nav
+*.snm
+*.vrb
+*.idx
+*.ilg
+*.ind
+*.dvi
+*.ps
+*.brf
+*.listing
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# Editors and OS
+*~
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.code-workspace
