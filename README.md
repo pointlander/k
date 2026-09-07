@@ -28,3 +28,13 @@ python3 toy/k_merge.py -n 8 --state random --top 12
 ```
 
 The analog enumerates \(2^n\) universes, scores each by gzip length plus a discrete-curvature (GR-like) penalty, and merges them. It is the shape of the cycle, not gravity.
+
+## Lean
+
+The mathematical core is formalized in Lean 4 (no mathlib) under [`lean/`](lean/):
+
+```sh
+cd lean && lake build
+```
+
+Proved: Cantor's split (`{0,1}*` bijects with `ℕ`; `ℕ → Bool` is uncountable), the holographic bound (`≤ 2^A` programs of length `A`), Einsteinian dominance of the Occam factor, that the merge is a countable sum, and that constant (Einstein) configurations minimize discrete curvature. Physics postulates (the GR Cauchy problem, the existence of a GR-machine) remain inputs.

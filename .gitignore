@@ -35,6 +35,14 @@ venv/
 .pytest_cache/
 .mypy_cache/
 
+# Lean
+lean/.lake/
+lean/lake-manifest.json
+*.olean
+*.ilean
+*.c
+*.trace
+
 # Editors and OS
 *~
 *.swp
