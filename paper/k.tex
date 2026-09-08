@@ -982,6 +982,24 @@ The algebraic core---$\mathrm{dof}(4)=2$, $\mathrm{dof}(3)=0$, Gauss--Bonnet top
 A catalog is not $3{+}1$ gravity.
 What survives is the compressor count: $2{+}1$ is dead, extra dimensions and curvature junk are longer, $3{+}1$ Einstein is Kolmogorov-elite.
 
+\subsection{Plugin language}
+
+The dimensionality analog still listed gravity plugins by hand.
+The Standard Model problem is the same encoding with matter.
+A sixth companion program is that language, not a new $\Gamma$.
+A group word is a 2-bit tagged prefix-free code
+\begin{equation}
+  G \;\coloneqq\; \mathrm{U}(1) \;\mid\; \mathrm{SU}(n) \;\mid\; \mathrm{SO}(n) \;\mid\; G\times H,
+\end{equation}
+with nats unary ($1^{n}0$).
+A plugin is gravity (the dimensionality word) plus $G$, a fermion-rep count, $n_{\mathrm{gen}}$, and $\deg V$.
+A raw landscape of $N$ vacua is $N$ concatenated copies, length $\Theta(N)$; a generator that prints $N$ copies costs $O(\log N)$.
+Conditioned on a low-energy sample that requires $4$d Einstein and SM quantum numbers---an input, like Choquet--Bruhat---$SU(5)$ plus a 2-bit breaking program is length $24$ and takes merge mass $0.94$; the SM product is length $34$; a raw list of $16$ SM copies is length $308$.
+$SU(5)$ is a \emph{shorter} word than $SU(3)\times SU(2)\times U(1)$.
+The language does not derive the SM uniquely.
+What it derives is that ``the SM is a plugin'' is a minimization over a fixed grammar, that GUTs win as short generators unless the breaking sector is charged in the word, and that a named vacuum list of size $N$ is a long program.
+The algebraic core---$|\mathrm{SM}|=17$, $|\mathrm{SU}(5)|=8$, raw $N\times\mathrm{U}(1)$ longer than the SM word for $N\ge 5$, a $16$-copy generator shorter than the raw list, Kraft on the named encodings---is a Lean 4 module in the repository.
+
 \section{Open problems}
 
 \begin{enumerate}
@@ -998,7 +1016,8 @@ What survives is the compressor count: $2{+}1$ is dead, extra dimensions and cur
   The minisuperspace analog now runs Hartle--Hawking against tunneling as WKB amplitudes; the remaining task is the same contest in $3{+}1$.
 
   \item \textbf{Standard Model as plugin.}
-  State a precise minimization problem whose solution would \emph{be} the Standard Model: a shortest matter Lagrangian, in a fixed encoding of field theories, compatible with a given low-energy sample.
+  A finite plugin language is in the repository: prefix-free group words, $SU(5)$ shorter than the SM product, raw $N$-landscapes longer than either.
+  The remaining task is to charge the GUT Higgs/breaking sector honestly enough that the minimizer on the grammar, given the low-energy sample, either \emph{is} the SM or fails in public.
 
   \item \textbf{Evaporation.}
   A $1{+}1$ Vaidya analog is in the repository: Page $\widehat{\KG}$ of hole plus radiation stays $K(s)$ along the history, while remnants and scrambles pay $\beta t^{2}$.
@@ -1009,8 +1028,8 @@ What survives is the compressor count: $2{+}1$ is dead, extra dimensions and cur
   The remaining task is a bound in a concrete device, including whether $\Delta K$ can be made larger than laboratory systematics.
 
   \item \textbf{Dimensionality.}
-  A catalog analog is in the repository: $4$d Einstein--Hilbert is the unique maximizer, $2{+}1$ is dead, extra dimensions and Lovelock junk pay bits.
-  The remaining task is to lift the graviton-count and Lovelock identities to a theorem that $3{+}1$ Einstein is the shortest well-posed compressor among encodings of field theories, not among a hand-listed catalog.
+  A catalog analog is in the repository, and gravity is now a nonterminal of the plugin language rather than a hand list.
+  The remaining task is to prove that $3{+}1$ Einstein is the shortest well-posed compressor \emph{in that grammar}, not merely among $D=2{\ldots}6$ with a Gauss--Bonnet bit.
 \end{enumerate}
 
 \section{The theory in one page}

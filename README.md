@@ -74,6 +74,16 @@ python3 toy/dimension.py --compare
 
 4d Einstein–Hilbert is the unique maximizer. 2+1 is dead (zero local gravitons). Extra dimensions and curvature junk pay bits. Compressors take essentially all the merge mass. That is Dzhunushaliev's complexity-driven dimensional reduction as a merge.
 
+A finite language for field-theory plugins (open problems 4 and 7) is [`toy/plugin.py`](toy/plugin.py):
+
+```sh
+python3 toy/plugin.py --self-check
+python3 toy/plugin.py --compare
+python3 toy/plugin.py --landscape 16
+```
+
+Group words are a 2-bit tagged prefix-free code. Conditioned on an SM-like sample, \(SU(5)\) is a shorter generator than \(SU(3)\times SU(2)\times U(1)\). A raw list of \(N\) vacua costs \(\Theta(N)\) and loses to both the SM word and a generator of cost \(O(\log N)\). The language does not derive the SM uniquely; it makes “the SM is a plugin” a minimization problem.
+
 ## Lean
 
 The mathematical core is formalized in Lean 4 (no mathlib) under [`lean/`](lean/):
@@ -82,4 +92,4 @@ The mathematical core is formalized in Lean 4 (no mathlib) under [`lean/`](lean/
 cd lean && lake build
 ```
 
-Proved: Cantor's split (`{0,1}*` bijects with `ℕ`; `ℕ → Bool` is uncountable), Kraft's inequality (`∑ 2^{N-|p|} ≤ 2^N` for prefix-free programs, recovering the holographic bound `|P| ≤ 2^A` at equal length), Einsteinian dominance of the Occam factor, that the merge is a countable sum, that constant (Einstein) configurations minimize discrete curvature, the minisuperspace cycle (Friedmann constraint, de Sitter fixed point, on-shell 3-data as compressor), 1+1 evaporation (Bondi constraint, leftover holography, constant Page \(\widehat{K}_G\), Page dominance over remnants and scrambles), the laboratory Born correction (isolated short-vs-dump disagrees with Born; thermal records and equal-K clicks track Born; additive environments do not swamp), and 3+1 dimensionality (`D(D-3)/2` polarizations, Lovelock zero/topological/dynamical, 4d Einstein–Hilbert as the 2-bit vacuum compressor). Physics postulates (the GR Cauchy problem, the existence of a GR-machine) remain inputs. `cd lean && lake build` checks `K.Mini` against `toy/minisuperspace.py`, `K.Evap` against `toy/evaporation.py`, `K.Lab` against `toy/interferometer.py`, and `K.Dim` against `toy/dimension.py`.
+Proved: Cantor's split (`{0,1}*` bijects with `ℕ`; `ℕ → Bool` is uncountable), Kraft's inequality (`∑ 2^{N-|p|} ≤ 2^N` for prefix-free programs, recovering the holographic bound `|P| ≤ 2^A` at equal length), Einsteinian dominance of the Occam factor, that the merge is a countable sum, that constant (Einstein) configurations minimize discrete curvature, the minisuperspace cycle (Friedmann constraint, de Sitter fixed point, on-shell 3-data as compressor), 1+1 evaporation (Bondi constraint, leftover holography, constant Page \(\widehat{K}_G\), Page dominance over remnants and scrambles), the laboratory Born correction (isolated short-vs-dump disagrees with Born; thermal records and equal-K clicks track Born; additive environments do not swamp), 3+1 dimensionality (`D(D-3)/2` polarizations, Lovelock zero/topological/dynamical, 4d Einstein–Hilbert as the 2-bit vacuum compressor), and a finite field-theory plugin language (prefix-free group grammar, \(SU(5)\) shorter than the SM product, raw \(N\)-landscapes longer than the SM word). Physics postulates (the GR Cauchy problem, the existence of a GR-machine) remain inputs. `cd lean && lake build` checks `K.Mini` against `toy/minisuperspace.py`, `K.Evap` against `toy/evaporation.py`, `K.Lab` against `toy/interferometer.py`, `K.Dim` against `toy/dimension.py`, and `K.Plugin` against `toy/plugin.py`.
