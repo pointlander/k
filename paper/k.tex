@@ -956,6 +956,19 @@ The algebraic core---Bondi constraint, leftover holography, constant Page $\wide
 Kraft's inequality is the static bound; this analog is that bound along a history.
 $1{+}1$ Vaidya is not $3{+}1$ evaporation, but it is the smallest place the information-problem reading of~\eqref{eq:KBH} can fail.
 
+\subsection{Laboratory Born-correction analog}
+
+A fourth companion program runs~\eqref{eq:born-corr} on an $n$-qubit register, with no Einstein solver: $\Gamma$ is the identity, the sample is the laboratory record, and $\widehat{\KG}=K(\mathrm{record})$ in a tiny prefix language.
+Two branches have independently bounded $K$: a short history $0^{n}$ ($K=2$) versus an incompressible dump ($K=n+1$).
+Three scorings are compared.
+Isolated, $\widehat{\KG}=K(\mathrm{register})$: equal Born on $n=6$ gives $\Delta K=5$ and merge mass $W_{\mathrm{short}}=0.97$ against Born $1/2$, the ratio $2^{\Delta K}$ of~\eqref{eq:born-corr}.
+Two named clicks $0^{n}$ versus $1^{n}$ have $\Delta K=0$ even when isolated, so $W$ tracks Born---ordinary detector outcomes are both short programs.
+A thermal bath of length $L$ is scored as $\widehat{\KG}=\max\bigl(K(\mathrm{env}),K(\mathrm{register})\bigr)$: once $L\ge K(\mathrm{dump})$ both records cost $L$ and $W$ tracks Born again.
+Additive scoring $K(\mathrm{env})+K(\mathrm{register})$ is the control: $\Delta K$ is independent of $L$, so a large fridge does not by itself cancel an isolated-register dump.
+The algebraic core---isolated $2^{c}$ bias, equal-$K$ clicks, additive non-swamp, thermal swamp at $K(\mathrm{env})\ge K(\mathrm{register})$---is a Lean 4 module in the repository.
+A qubit register is not a universe, and the tiny language is not $K$.
+What survives is the isolation theorem the paper warned about:~\eqref{eq:born-corr} is accessible only in a fully specified, isolated device whose total $\KG$ is dominated by the register, and it is not a claim that laboratory Born frequencies fail.
+
 \section{Open problems}
 
 \begin{enumerate}
@@ -979,7 +992,8 @@ $1{+}1$ Vaidya is not $3{+}1$ evaporation, but it is the smallest place the info
   The remaining task is the same conservation in $3{+}1$, including whether the matching to~\eqref{eq:KBH} is exact (no firewall, no remnant).
 
   \item \textbf{Complexity corrections.}
-  Bound $\KG(a)-\KG(b)$ in a concrete few-qubit interferometer and say whether~\eqref{eq:born-corr} is experimentally accessible.
+  A few-qubit interferometer analog is in the repository: isolated short-versus-dump disagrees with Born by $2^{\Delta K}$; thermal records with $L\ge K(\mathrm{dump})$, and two short clicks, track Born; additive $K(\mathrm{env})+K(\mathrm{reg})$ does not swamp.
+  The remaining task is a bound in a concrete device, including whether $\Delta K$ can be made larger than laboratory systematics.
 
   \item \textbf{Dimensionality.}
   Show that $3+1$ is the shortest well-posed Einstein compressor, in the sense of Dzhunushaliev's complexity-driven dimensional reduction~\cite{dzhunushaliev1998,dzhunushaliev2002} made into a theorem about $\KG$.

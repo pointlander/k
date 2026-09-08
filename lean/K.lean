@@ -14,6 +14,9 @@ This library proves the mathematical core of `paper/k.tex`:
   compressor, and k-weight dominance of on-shell 3-data.
 * Evaporation: Bondi constraint, leftover holography, constant Page `K̂_G`,
   and dominance of the Page family over remnants and scrambles.
+* Laboratory Born correction: isolated short-vs-dump disagrees with Born;
+  thermal records and equal-K clicks track Born; additive environments
+  do not swamp.
 
 Physics postulates (the GR Cauchy problem, the existence of a GR-machine,
 the identification of `I_EH` with `K_G` on saddles) remain inputs.  What is
@@ -28,3 +31,4 @@ import K.Theory
 import K.Analog
 import K.Mini
 import K.Evap
+import K.Lab
