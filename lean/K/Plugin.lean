@@ -3,13 +3,16 @@ Finite language for field-theory plugins, matching `toy/plugin.py`.
 
 A group word is a 2-bit tagged prefix-free code:
 `U(1) | SU(n) | SO(n) | G × H`, with nats unary (`1ⁿ0`).
-A raw landscape of `n` copies costs `Θ(n)`; a generator that prints
-`n` copies costs `O(log n)`.  `SU(5)` is a shorter word than
-`SU(3)×SU(2)×U(1)`.  A named vacuum list of size `n` is longer than
-the SM word once `n` exceeds that word's length.
+Higgs/breaking is in the same grammar: `unary k ++ rep^k` with
+`rep ::= fund | afund | adj | spinor`.  SM pays one fund (the doublet);
+`SU(5)` pays adj+fund (24 and 5); `SO(10)` pays adj+fund+spinor.
+Adjoint is a short program given `G`, not unary-24.
+
+After that accounting the minimizer is still `SU(5)`, not the SM product.
+A named vacuum list of size `n` remains a long program.
 
 Phenomenology (`I_wrong`) remains an input, like Choquet–Bruhat in `K.Dim`.
-What is proved is the grammar, the length comparisons, and Kraft on
+What is proved is the grammar, the Higgs lengths, and Kraft on
 the encodings.
 -/
 
@@ -150,29 +153,71 @@ theorem named_holography :
 theorem named_kraft : kraftSum namedEnc 17 ≤ 2 ^ 17 :=
   kraft_le namedEnc 17 named_prefixFree
 
+/-! ### Higgs / breaking words -/
+
+inductive Rep where
+  | fund
+  | afund
+  | adj
+  | spinor
+  deriving DecidableEq, Repr
+
+def encodeRep : Rep → Bitstring
+  | .fund => [false, false]
+  | .afund => [false, true]
+  | .adj => [true, false]
+  | .spinor => [true, true]
+
+theorem encodeRep_len (r : Rep) : (encodeRep r).length = 2 := by
+  cases r <;> rfl
+
+/-- `unary k ++ rep^k`.  Length `3k+1` when every rep is a 2-bit tag. -/
+def higgsLen (k : Nat) : Nat :=
+  (k + 1) + 2 * k
+
+theorem higgsLen_eq (k : Nat) : higgsLen k = 3 * k + 1 := by
+  simp [higgsLen]
+  omega
+
+theorem smHiggs_len : higgsLen 1 = 4 := by simp [higgsLen]
+theorem su5Higgs_len : higgsLen 2 = 7 := by simp [higgsLen]
+theorem so10Higgs_len : higgsLen 3 = 10 := by simp [higgsLen]
+
+/-- SM doublet is shorter than `SU(5)`'s 24+5. -/
+theorem smHiggs_lt_su5Higgs : higgsLen 1 < higgsLen 2 := by
+  simp [smHiggs_len, su5Higgs_len]
+
 /-! ### Matter-plugin lengths, matching the Python analog -/
 
 /-- `4d` Einstein–Hilbert gravity word (from `K.Dim`), 2 bits. -/
 def gravity4 : Nat := 2
 
-/-- Full theory length: gravity + group + unary `nRep, nGen, degV` + breaking. -/
-def theoryLen (g : Group) (nRep nGen degV breakCost : Nat) : Nat :=
-  gravity4 + (encode g).length + (nRep + 1) + (nGen + 1) + (degV + 1) + breakCost
+/-- Full theory length: gravity + group + unary `nFerm, nGen, degV` + Higgs. -/
+def theoryLen (g : Group) (nFerm nGen degV nHiggs : Nat) : Nat :=
+  gravity4 + (encode g).length + (nFerm + 1) + (nGen + 1) + (degV + 1) + higgsLen nHiggs
 
-def smTheory : Nat := theoryLen sm 5 3 4 0
+def smTheory : Nat := theoryLen sm 5 3 4 1
 
 def su5Theory : Nat := theoryLen su5 2 3 4 2
 
-theorem smTheory_len : smTheory = 34 := by
-  simp [smTheory, theoryLen, gravity4, encode_sm_len]
+def so10Theory : Nat := theoryLen so10 1 3 4 3
 
-theorem su5Theory_len : su5Theory = 24 := by
-  simp [su5Theory, theoryLen, gravity4, encode_su5_len]
+theorem smTheory_len : smTheory = 38 := by
+  simp [smTheory, theoryLen, gravity4, encode_sm_len, higgsLen]
 
-/-- Conditioned on an SM-like sample, `SU(5)` plus a 2-bit breaking program
-is a shorter plugin than the SM product. -/
+theorem su5Theory_len : su5Theory = 29 := by
+  simp [su5Theory, theoryLen, gravity4, encode_su5_len, higgsLen]
+
+theorem so10Theory_len : so10Theory = 36 := by
+  simp [so10Theory, theoryLen, gravity4, encode_so10_len, higgsLen]
+
+/-- After charging 24+5, `SU(5)` is still a shorter plugin than the SM product.
+This is the public failure of “the SM is the unique minimizer” in this grammar. -/
 theorem su5_beats_sm : su5Theory < smTheory := by
   simp [su5Theory_len, smTheory_len]
+
+theorem so10_beats_sm : so10Theory < smTheory := by
+  simp [so10Theory_len, smTheory_len]
 
 theorem sm_beats_raw16 : smTheory < rawLen 16 sm := by
   simp [smTheory_len, rawLen, encode_sm_len]
@@ -180,11 +225,11 @@ theorem sm_beats_raw16 : smTheory < rawLen 16 sm := by
 def weight (born kg M : Nat) : Nat :=
   born * 2 ^ (M - kg)
 
-/-- Occam: the shorter GUT word dominates the SM word at equal Born. -/
-theorem su5_dominates_sm (born M : Nat) (hS : 24 ≤ M) (hD : 34 ≤ M) :
-    weight born smTheory M * born * 2 ^ 10 ≤
+/-- Occam: `SU(5)` plus adj+fund dominates the SM product by `2^9`. -/
+theorem su5_dominates_sm (born M : Nat) (hS : 29 ≤ M) (hD : 38 ≤ M) :
+    weight born smTheory M * born * 2 ^ 9 ≤
       weight born su5Theory M * born := by
-  have hc : su5Theory + 10 ≤ smTheory := by
+  have hc : su5Theory + 9 ≤ smTheory := by
     simp [su5Theory_len, smTheory_len]
   exact weight_ratio hc (by simp [su5Theory_len]; exact hS)
     (by simp [smTheory_len]; exact hD)

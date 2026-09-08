@@ -1,27 +1,22 @@
 #!/usr/bin/env python3
-"""Finite language for field-theory plugins.
+"""Finite language for field-theory plugins, with GUT Higgs/breaking in-word.
 
 Open problems 4 and 7: the Standard Model is a minimization over a fixed
-encoding of field theories, and dimensionality is the same encoding
-restricted to gravity.  This analog *is* that encoding, not a new Γ.
+encoding of field theories.  Breaking is not a 2-bit discount.  It is a
+Higgs word in the same grammar.
 
-  plugin ::= gravity  group  nRep  nGen  degV
+  plugin ::= gravity  group  nFerm  nGen  degV  higgs
   group  ::= U(1) | SU(n) | SO(n) | G × H
+  higgs  ::= unary(k)  rep^k
+  rep    ::= fund | afund | adj | spinor
 
-Gravity is the dimensionality plugin (D, EH/GB, moduli).  Group words
-are a 2-bit tagged prefix-free code; nats are unary (1ⁿ0).  A raw
-landscape of N vacua costs Θ(N); a generator that prints N copies costs
-O(log N).
+SM Higgs is one fund (the doublet).  SU(5) pays adj+fund (24 and 5).
+SO(10) pays adj+fund+spinor (45, 10, 16).  Adjoint is a short program
+given G ("all generators"), not unary-24.
 
 K̂_G = |encode(plugin)| + β I_dead + γ I_wrong.
-I_wrong is an input: incompatibility with a given low-energy sample
-(needs 4d Einstein plus SM quantum numbers).  SU(5) and SO(10) fit after
-a short breaking program; U(1) and empty matter do not.
-
-The language does not derive the SM uniquely — SU(5) is a shorter word
-than SU(3)×SU(2)×U(1).  What it does derive: a named vacuum list of size
-N is exponentially heavier than a short generator, and heavier than the
-SM word, once N exceeds that word's length.
+I_wrong is an input (needs 4d Einstein plus SM quantum numbers).
+The merge then either selects the SM or fails in public.
 
 Stdlib only.  Import `dimension` from the same directory.
 """
@@ -154,6 +149,57 @@ def gen_list_len(n: int, g: Group) -> int:
 
 
 # ---------------------------------------------------------------------------
+# Higgs / breaking sector
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class Rep:
+    """Irrep word.  fund/afund/adj/spinor are short names given G."""
+
+    kind: str  # fund | afund | adj | spinor
+
+    def encode(self) -> str:
+        return {"fund": "00", "afund": "01", "adj": "10", "spinor": "11"}[self.kind]
+
+    def __str__(self) -> str:
+        return {"fund": "fund", "afund": "afund", "adj": "adj", "spinor": "spinor"}[self.kind]
+
+
+FUND = Rep("fund")
+AFUND = Rep("afund")
+ADJ = Rep("adj")
+SPINOR = Rep("spinor")
+
+# SM: one weak doublet.  SU(5): 24 + 5.  SO(10): 45 + 10 + 16.
+SM_HIGGS = (FUND,)
+SU5_HIGGS = (ADJ, FUND)
+SO10_HIGGS = (ADJ, FUND, SPINOR)
+
+
+def encode_higgs(reps: tuple[Rep, ...]) -> str:
+    return unary(len(reps)) + "".join(r.encode() for r in reps)
+
+
+def decode_higgs(s: str, i: int = 0) -> tuple[tuple[Rep, ...], int] | None:
+    got = decode_unary(s, i)
+    if got is None:
+        return None
+    k, i = got
+    reps: list[Rep] = []
+    table = {"00": FUND, "01": AFUND, "10": ADJ, "11": SPINOR}
+    for _ in range(k):
+        if i + 1 >= len(s):
+            return None
+        tag = s[i : i + 2]
+        if tag not in table:
+            return None
+        reps.append(table[tag])
+        i += 2
+    return tuple(reps), i
+
+
+# ---------------------------------------------------------------------------
 # Theories
 # ---------------------------------------------------------------------------
 
@@ -165,12 +211,12 @@ class Theory:
     name: str
     gravity: dim.Plugin
     group: Group
-    n_rep: int
+    n_ferm: int
     n_gen: int
     deg_v: int
+    higgs: tuple[Rep, ...] = ()
     kind: str = "theory"  # theory | raw | gen
     copies: int = 1
-    break_cost: int = 0  # short GUT-breaking program
 
     def group_len(self) -> int:
         if self.kind == "raw":
@@ -184,10 +230,10 @@ class Theory:
         return (
             self.gravity.k_data()
             + self.group_len()
-            + (self.n_rep + 1)
+            + (self.n_ferm + 1)
             + (self.n_gen + 1)
             + (self.deg_v + 1)
-            + self.break_cost
+            + len(encode_higgs(self.higgs))
         )
 
     def i_wrong(self, sample: str) -> int:
@@ -220,16 +266,16 @@ def named_theories() -> list[Theory]:
     eh5m = dim.Plugin(5, True, False, 1)
     return [
         Theory("4d EH", eh4, U1, 0, 0, 0),
-        Theory("4d EH+U(1)", eh4, U1, 1, 1, 2),
-        Theory("4d EH+SM", eh4, SM, 5, 3, 4),
-        Theory("4d EH+SU(5)", eh4, SU5, 2, 3, 4, break_cost=2),
-        Theory("4d EH+SO(10)", eh4, SO10, 1, 3, 4, break_cost=2),
-        Theory("raw 16×U(1)", eh4, U1, 1, 1, 2, kind="raw", copies=16),
-        Theory("gen 16×U(1)", eh4, U1, 1, 1, 2, kind="gen", copies=16),
-        Theory("raw 16×SM", eh4, SM, 5, 3, 4, kind="raw", copies=16),
-        Theory("gen 16×SM", eh4, SM, 5, 3, 4, kind="gen", copies=16),
-        Theory("3d EH+SM", eh3, SM, 5, 3, 4),
-        Theory("5d EH+m+SM", eh5m, SM, 5, 3, 4),
+        Theory("4d EH+U(1)", eh4, U1, 1, 1, 2, higgs=SM_HIGGS),
+        Theory("4d EH+SM", eh4, SM, 5, 3, 4, higgs=SM_HIGGS),
+        Theory("4d EH+SU(5)", eh4, SU5, 2, 3, 4, higgs=SU5_HIGGS),
+        Theory("4d EH+SO(10)", eh4, SO10, 1, 3, 4, higgs=SO10_HIGGS),
+        Theory("raw 16×U(1)", eh4, U1, 1, 1, 2, higgs=SM_HIGGS, kind="raw", copies=16),
+        Theory("gen 16×U(1)", eh4, U1, 1, 1, 2, higgs=SM_HIGGS, kind="gen", copies=16),
+        Theory("raw 16×SM", eh4, SM, 5, 3, 4, higgs=SM_HIGGS, kind="raw", copies=16),
+        Theory("gen 16×SM", eh4, SM, 5, 3, 4, higgs=SM_HIGGS, kind="gen", copies=16),
+        Theory("3d EH+SM", eh3, SM, 5, 3, 4, higgs=SM_HIGGS),
+        Theory("5d EH+m+SM", eh5m, SM, 5, 3, 4, higgs=SM_HIGGS),
     ]
 
 
@@ -333,43 +379,54 @@ def self_check() -> int:
         print("FAIL: SM word should beat 16 raw U(1)s")
         return 1
 
-    eh4 = dim.Plugin(4, True, False, 0)
-    sm = Theory("4d EH+SM", eh4, SM, 5, 3, 4)
-    su5 = Theory("4d EH+SU(5)", eh4, SU5, 2, 3, 4, break_cost=2)
-    if sm.i_wrong("sm") != 0 or su5.i_wrong("sm") != 0:
-        print("FAIL: SM and SU(5) should fit the SM sample")
+    for reps in (SM_HIGGS, SU5_HIGGS, SO10_HIGGS):
+        w = encode_higgs(reps)
+        got = decode_higgs(w)
+        if got is None or got[0] != reps or got[1] != len(w):
+            print(f"FAIL: Higgs roundtrip {reps} -> {w} -> {got}")
+            return 1
+    if len(encode_higgs(SM_HIGGS)) != 4 or len(encode_higgs(SU5_HIGGS)) != 7:
+        print("FAIL: Higgs lengths")
         return 1
-    u1t = Theory("4d EH+U(1)", eh4, U1, 1, 1, 2)
+    if not (len(encode_higgs(SM_HIGGS)) < len(encode_higgs(SU5_HIGGS))):
+        print("FAIL: SM Higgs should be shorter than 24+5")
+        return 1
+
+    eh4 = dim.Plugin(4, True, False, 0)
+    sm = Theory("4d EH+SM", eh4, SM, 5, 3, 4, higgs=SM_HIGGS)
+    su5 = Theory("4d EH+SU(5)", eh4, SU5, 2, 3, 4, higgs=SU5_HIGGS)
+    so10 = Theory("4d EH+SO(10)", eh4, SO10, 1, 3, 4, higgs=SO10_HIGGS)
+    if sm.i_wrong("sm") != 0 or su5.i_wrong("sm") != 0 or so10.i_wrong("sm") != 0:
+        print("FAIL: SM, SU(5), SO(10) should fit the SM sample")
+        return 1
+    u1t = Theory("4d EH+U(1)", eh4, U1, 1, 1, 2, higgs=SM_HIGGS)
     if u1t.i_wrong("sm") != 1:
         print("FAIL: U(1) should not fit the SM sample")
-        return 1
-    if su5.encode_len() >= sm.encode_len():
-        print(f"FAIL: SU(5)+break should be shorter than SM: {su5.encode_len()} vs {sm.encode_len()}")
         return 1
 
     beta, gamma = 8.0, 8.0
     us = run_cycle(named_theories(), beta, gamma, "sm")
     star = max(us, key=lambda u: u.w)
-    if star.theory.name != "4d EH+SU(5)":
-        print(f"FAIL: typical SM-sample plugin {star.theory.name} want 4d EH+SU(5)")
-        return 1
     w_raw = sum(u.w for u in us if u.theory.kind == "raw")
-    w_gut = sum(u.w for u in us if "SU(5)" in u.theory.name or "SO(10)" in u.theory.name)
     w_sm = sum(u.w for u in us if u.theory.name == "4d EH+SM")
+    w_su5 = sum(u.w for u in us if u.theory.name == "4d EH+SU(5)")
+    w_so10 = sum(u.w for u in us if u.theory.name == "4d EH+SO(10)")
     if w_raw > w_sm:
         print(f"FAIL: raw landscape mass {w_raw:.4f} vs SM {w_sm:.4f}")
         return 1
-    if w_gut <= w_sm:
-        print(f"FAIL: GUT should beat SM as a short generator: GUT {w_gut:.4f} SM {w_sm:.4f}")
-        return 1
+    # Who minimizes is a result, not a wish.  Record it.
+    winner = star.theory.name
 
     print("self-check ok")
     print(f"  |U(1)|={len(U1.encode())}  |SU(5)|={len(SU5.encode())}  |SM|={len(SM.encode())}  |SO(10)|={len(SO10.encode())}")
+    print(f"  Higgs |SM|={len(encode_higgs(SM_HIGGS))}  |SU(5) 24+5|={len(encode_higgs(SU5_HIGGS))}  |SO(10) 45+10+16|={len(encode_higgs(SO10_HIGGS))}")
     print(f"  prefix-free on {len(groups)} named groups")
-    print(f"  raw 16×U(1)={raw_u1}   gen 16×U(1)={gen_u1}   |SM|={len(SM.encode())}")
-    print(f"  encode SM={sm.encode_len()}   SU(5)+break={su5.encode_len()}")
-    print(f"  typical |Ω⟩=SM-sample   {star.theory.name}   W={star.w:.4f}")
-    print(f"  W(GUT)={w_gut:.4f}  W(SM)={w_sm:.4f}  W(raw landscape)={w_raw:.4f}")
+    print(f"  raw 16×U(1)={raw_u1}   gen 16×U(1)={gen_u1}   |SM group|={len(SM.encode())}")
+    print(f"  encode SM={sm.encode_len()}   SU(5)+24+5={su5.encode_len()}   SO(10)+45+10+16={so10.encode_len()}")
+    print(f"  typical |Ω⟩=SM-sample   {winner}   W={star.w:.4f}")
+    print(f"  W(SU(5))={w_su5:.4f}  W(SO(10))={w_so10:.4f}  W(SM)={w_sm:.4f}  W(raw)={w_raw:.4f}")
+    if winner != "4d EH+SM":
+        print("  minimizer is not the SM: GUT Higgs-in-word is still cheaper than the product group.")
     return 0
 
 
@@ -377,26 +434,30 @@ def print_compare(args: argparse.Namespace) -> int:
     us = run_cycle(named_theories(), args.beta, args.gamma, args.sample)
     print("field-theory plugin language")
     print(f"  sample={args.sample}  β={args.beta:g}  γ={args.gamma:g}")
-    print("  group ::= U(1) | SU(n) | SO(n) | G×H     nats unary, tags 2-bit")
+    print("  group ::= U(1) | SU(n) | SO(n) | G×H     higgs ::= unary(k) rep^k")
+    print("  SM Higgs = fund;  SU(5) = adj+fund (24+5);  SO(10) = adj+fund+spinor")
     print()
     print(
-        f"  {'theory':<18}{'group':<22}{'|enc|':>6}{'dead':>6}{'wrong':>7}"
+        f"  {'theory':<18}{'group':<22}{'higgs':>12}{'|enc|':>6}"
         f"{'K̂_G':>7}{'W':>10}"
     )
     ranked = sorted(us, key=lambda u: -u.w)
     for u in ranked[: args.top]:
         t = u.theory
+        hg = "+".join(str(r) for r in t.higgs) if t.higgs else "—"
         print(
-            f"  {t.name:<18}{str(t.group):<22}{t.encode_len():6d}"
-            f"{t.gravity.i_dead():6d}{t.i_wrong(args.sample):7d}"
+            f"  {t.name:<18}{str(t.group):<22}{hg:>12}{t.encode_len():6d}"
             f"{u.k_hat:7.1f}{u.w:10.4f}"
         )
     star = ranked[0]
     print()
     print(f"  typical  {star.theory.name}   W={star.w:.4f}   K̂_G={star.k_hat:.1f}")
     if args.sample == "sm":
-        print("  Conditioned on an SM-like sample, SU(5) is a shorter generator than the SM word.")
-        print("  Raw N-lists lose to both.  That is the landscape as a long program.")
+        if star.theory.name == "4d EH+SM":
+            print("  Minimizer is the SM product once GUT Higgs is in the word.")
+        else:
+            print("  Minimizer is not the SM: adjoint+fund is still a shorter breaking sector")
+            print("  than writing SU(3)×SU(2)×U(1).  Raw N-lists lose either way.")
     return 0
 
 

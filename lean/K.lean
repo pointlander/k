@@ -20,9 +20,9 @@ This library proves the mathematical core of `paper/k.tex`:
 * Dimensionality: local graviton polarizations `D(D−3)/2`, Lovelock
   zero/topological/dynamical, and 4d Einstein–Hilbert as the 2-bit vacuum
   compressor over 2+1 (dead) and 5d plus moduli.
-* Field-theory plugins: a prefix-free group grammar, `SU(5)` shorter than
-  the SM product, raw `N`-landscapes longer than the SM word, generators
-  `O(log N)`.
+* Field-theory plugins: a prefix-free group grammar, Higgs in-word
+  (SM fund vs `SU(5)` adj+fund), `SU(5)` still the minimizer after
+  charging `24+5`, raw `N`-landscapes longer than the SM word.
 
 Physics postulates (the GR Cauchy problem, the existence of a GR-machine,
 the identification of `I_EH` with `K_G` on saddles) remain inputs.  What is

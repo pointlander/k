@@ -992,13 +992,18 @@ A group word is a 2-bit tagged prefix-free code
   G \;\coloneqq\; \mathrm{U}(1) \;\mid\; \mathrm{SU}(n) \;\mid\; \mathrm{SO}(n) \;\mid\; G\times H,
 \end{equation}
 with nats unary ($1^{n}0$).
-A plugin is gravity (the dimensionality word) plus $G$, a fermion-rep count, $n_{\mathrm{gen}}$, and $\deg V$.
+A plugin is gravity (the dimensionality word) plus $G$, a fermion-rep count, $n_{\mathrm{gen}}$, $\deg V$, and a Higgs word $\mathtt{unary}(k)\,\mathrm{rep}^{k}$ with $\mathrm{rep}\in\{\mathrm{fund},\mathrm{afund},\mathrm{adj},\mathrm{spinor}\}$.
+The SM pays one fund (the doublet).
+$SU(5)$ pays adj$+$fund (the $\mathbf{24}$ and the $\mathbf{5}$).
+$SO(10)$ pays adj$+$fund$+$spinor (the $\mathbf{45}$, $\mathbf{10}$, and $\mathbf{16}$).
+Adjoint is a short program given $G$ (``all generators''), not unary-$24$.
 A raw landscape of $N$ vacua is $N$ concatenated copies, length $\Theta(N)$; a generator that prints $N$ copies costs $O(\log N)$.
-Conditioned on a low-energy sample that requires $4$d Einstein and SM quantum numbers---an input, like Choquet--Bruhat---$SU(5)$ plus a 2-bit breaking program is length $24$ and takes merge mass $0.94$; the SM product is length $34$; a raw list of $16$ SM copies is length $308$.
-$SU(5)$ is a \emph{shorter} word than $SU(3)\times SU(2)\times U(1)$.
-The language does not derive the SM uniquely.
-What it derives is that ``the SM is a plugin'' is a minimization over a fixed grammar, that GUTs win as short generators unless the breaking sector is charged in the word, and that a named vacuum list of size $N$ is a long program.
-The algebraic core---$|\mathrm{SM}|=17$, $|\mathrm{SU}(5)|=8$, raw $N\times\mathrm{U}(1)$ longer than the SM word for $N\ge 5$, a $16$-copy generator shorter than the raw list, Kraft on the named encodings---is a Lean 4 module in the repository.
+Conditioned on a low-energy sample that requires $4$d Einstein and SM quantum numbers---an input, like Choquet--Bruhat---the lengths are $29$ ($SU(5)$), $36$ ($SO(10)$), $38$ (SM product), $312$ (raw $16\times$SM).
+The minimizer is $SU(5)$, merge mass $0.99$.
+Charging the Higgs sector in the grammar did not make the SM the unique shortest plugin: the product group is still nine bits longer than $SU(5)$ plus a $24{+}5$.
+That is a public failure of ``the SM is the minimizer'' in this encoding, not a 2-bit discount.
+Raw $N$-lists still lose.
+The algebraic core---Higgs lengths $4$, $7$, $10$; theory lengths $38$, $29$, $36$; $SU(5)$ dominates the SM product by $2^{9}$; Kraft on the named encodings---is a Lean 4 module in the repository.
 
 \section{Open problems}
 
@@ -1016,8 +1021,9 @@ The algebraic core---$|\mathrm{SM}|=17$, $|\mathrm{SU}(5)|=8$, raw $N\times\math
   The minisuperspace analog now runs Hartle--Hawking against tunneling as WKB amplitudes; the remaining task is the same contest in $3{+}1$.
 
   \item \textbf{Standard Model as plugin.}
-  A finite plugin language is in the repository: prefix-free group words, $SU(5)$ shorter than the SM product, raw $N$-landscapes longer than either.
-  The remaining task is to charge the GUT Higgs/breaking sector honestly enough that the minimizer on the grammar, given the low-energy sample, either \emph{is} the SM or fails in public.
+  A finite plugin language with Higgs in-word is in the repository.
+  After charging $SU(5)$'s $\mathbf{24}{+}\mathbf{5}$ and $SO(10)$'s $\mathbf{45}{+}\mathbf{10}{+}\mathbf{16}$, the minimizer is still $SU(5)$, not the SM product.
+  The remaining task is a finer grammar (Dynkin labels, doublet-triplet operators) that either selects the SM or is abandoned.
 
   \item \textbf{Evaporation.}
   A $1{+}1$ Vaidya analog is in the repository: Page $\widehat{\KG}$ of hole plus radiation stays $K(s)$ along the history, while remnants and scrambles pay $\beta t^{2}$.
