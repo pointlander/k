@@ -837,11 +837,28 @@ The analog is also a warning.
 Gzip is not $K$, a cycle graph is not Einstein, and $n<\infty$ erases the cardinal split.
 What survives is the shape of the cycle: sample from a quantum state, score by compression plus a geometric penalty, merge.
 
+\subsection{Minisuperspace analog}
+
+A second companion program makes $\Gamma$ an Einstein solver.
+The skeleton is finite-bit Cauchy data $(a,H,\phi,\dot\phi)$ for flat or closed FLRW with a homogeneous scalar (a cosmological constant, or $\tfrac12 m^{2}\phi^{2}$).
+The on-shell slice solves the Friedmann constraint for $H$; those samples do not pay bits for Hubble, because Einstein supplies it.
+Generic $4$-data specify $H$ independently and are charged
+\begin{equation}
+  I_{\mathrm{off}} \;=\; \bigl|3\bigl(H^{2}+k/a^{2}\bigr)-\rho\bigr|.
+\end{equation}
+Inflation is RK4 integration of the minisuperspace Einstein--Klein--Gordon system.
+The weight is the same $k$-weight,
+$\widehat{\KG}(s)=K(\mathrm{data}\mid\mathrm{Einstein})+\beta I_{\mathrm{off}}^{2}$.
+On a $3$-bit grid the merge moves mass from the on-shell slice up relative to the Born measure, the typical universe is an expanding Einsteinian de~Sitter, and $\langle a(t)\rangle$ grows exponentially.
+The algebraic core---Friedmann constraint, de~Sitter as a fixed point of the minisuperspace vector field, Einstein as a bit-saving compressor, and $2^{\beta}$ dominance of on-shell vacuum over off-shell data---is a Lean 4 module in the repository.
+Minisuperspace is not $3{+}1$ gravity, but it is the smallest place the compressor claim can fail.
+
 \section{Open problems}
 
 \begin{enumerate}
   \item \textbf{The Einstein primitive.}
   Specify the GR-machine in enough detail that $L_{\mathrm{Einstein}}$ is a definite (if enormous) integer, and prove a precise version of~\eqref{eq:action-K} for Euclidean saddles.
+  A minisuperspace analog (FLRW plus a scalar, Friedmann as compressor) is in the repository; the remaining task is a definite $L_{\mathrm{Einstein}}$ in $3{+}1$.
 
   \item \textbf{Uniqueness of $\Gamma$.}
   Different discretizations of Cauchy data give different maps $\Gamma$.

@@ -29,6 +29,16 @@ python3 toy/k_merge.py -n 8 --state random --top 12
 
 The analog enumerates \(2^n\) universes, scores each by gzip length plus a discrete-curvature (GR-like) penalty, and merges them. It is the shape of the cycle, not gravity.
 
+A minisuperspace cycle, where \(\Gamma\) is an Einstein solver for FLRW plus a homogeneous scalar, is [`toy/minisuperspace.py`](toy/minisuperspace.py):
+
+```sh
+python3 toy/minisuperspace.py --self-check
+python3 toy/minisuperspace.py --bits 3 --state hh
+python3 toy/minisuperspace.py --potential quadratic --state tunneling --curvature 1
+```
+
+On-shell 3-data (Friedmann solves for \(H\)) is exponentially preferred over generic 4-data. That is Einstein as a compressor.
+
 ## Lean
 
 The mathematical core is formalized in Lean 4 (no mathlib) under [`lean/`](lean/):
@@ -37,4 +47,4 @@ The mathematical core is formalized in Lean 4 (no mathlib) under [`lean/`](lean/
 cd lean && lake build
 ```
 
-Proved: Cantor's split (`{0,1}*` bijects with `ℕ`; `ℕ → Bool` is uncountable), the holographic bound (`≤ 2^A` programs of length `A`), Einsteinian dominance of the Occam factor, that the merge is a countable sum, and that constant (Einstein) configurations minimize discrete curvature. Physics postulates (the GR Cauchy problem, the existence of a GR-machine) remain inputs.
+Proved: Cantor's split (`{0,1}*` bijects with `ℕ`; `ℕ → Bool` is uncountable), the holographic bound (`≤ 2^A` programs of length `A`), Einsteinian dominance of the Occam factor, that the merge is a countable sum, that constant (Einstein) configurations minimize discrete curvature, and the minisuperspace cycle (Friedmann constraint, de Sitter fixed point, on-shell 3-data as compressor). Physics postulates (the GR Cauchy problem, the existence of a GR-machine) remain inputs. `cd lean && lake build` checks `K.Mini` against `toy/minisuperspace.py`.
