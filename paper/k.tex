@@ -723,10 +723,8 @@ $W$ is a defining measure, as the Euclidean action is a defining measure in Hart
 Predictions that require the exact value of $K$ are not available; predictions that require only crude bounds (Einsteinian dominance, holographic caps, shortness of Schwarzschild, suppression of Boltzmann brains) are.
 
 It is not hypercomputation.
-The GR-machine is a Turing machine with an Einstein primitive.
-If that primitive is itself Turing-computable (numerical GR to finite resolution, which is all sampling ever needs), $\UTM$ is an ordinary UTM and $\KG$ differs from $K$ by $O(1)$.
-The continuum is never computed pointwise.
-It is named by a program that \emph{refers} to an Einstein development.
+Section~\ref{sec:hyper} is the argument: classical GR admits Malament--Hogarth worldlines that decide the halting problem, hence compute $K$, but those geometries are long programs, are not globally hyperbolic, and are suppressed by $W$.
+The GR-machine remains a Turing machine with an Einstein primitive.
 
 It is not, despite the countable sums, a causal-set theory~\cite{bombelli1987}, a CDT theory~\cite{ambjorn2005}, or a Wolfram model~\cite{wolfram2020}, although each of those is a legitimate choice of integer skeleton.
 The ontology is the pair $(\Hil,\Geo)$ with maps $\Gamma$ and $W$, not a particular discretization.
@@ -736,6 +734,74 @@ $\KG$ is uncomputable, $\ket{\Omega}$ is named but not constructed, and there wi
 The theory is complete as an ontology and a measure.
 It is incomplete as a decision procedure.
 That is the correct amount of completeness for a theory that takes Kolmogorov complexity as fundamental.
+
+\section{Hypercomputation}
+\label{sec:hyper}
+
+Kolmogorov complexity is uncomputable, but only just.
+The predicate $\KG(s)=n$ is $\Delta^{0}_{2}$: there exists a program of length $n$ that prints $s$, and none shorter.
+The first half is the halting problem; the second is its complement.
+So $K$ is computable from a halt oracle (Turing degree $0'$)~\cite{li2008}.
+Any device that decides HALT computes $K$, by dovetailing all programs of length at most $n$ and asking which halt with output $s$.
+
+Classical general relativity supplies such a device, on paper.
+
+\subsection{Malament--Hogarth geometries}
+
+A Malament--Hogarth spacetime contains a worldline $\lambda$ of infinite proper time that lies entirely in the causal past of an event $p$ reached by an observer in finite proper time~\cite{earman1993,hogarth2004}.
+Send a Turing machine along $\lambda$.
+If it ever halts, it signals to $p$.
+The observer, arriving at $p$, either has the signal or does not.
+That decides HALT, hence decides $K$.
+
+Hogarth showed that a suitable MH geometry can settle any arithmetic sentence~\cite{hogarth2004}.
+Etesi and N\'emeti argued that Kerr interiors implement a fragment of this~\cite{etesi2002,nemeti2006}.
+Welch showed that MH geometries can resolve hyperarithmetic queries, with an ordinal bound $w(M)$ that is a constant of the manifold~\cite{welch2008}.
+In the two-infinities language of this paper: an infinite integer computation is packed onto a continuum worldline and read off at one event.
+That is $\alef$ being decided by $\cont$.
+Inflation $\Gamma$ is the same logical shape---countable Cauchy data completed to a continuum spacetime.
+Closed timelike curves are a second, different GR loophole; they are not needed for the MH construction.
+
+\subsection{Why typical $k$-universes do not compute $W$}
+
+Four independent blocks sit between that construction and ``observers evaluate $\KG$.''
+
+\paragraph{The GR-machine is not an MH computer.}
+Postulate~\ref{post:weight} equips $\UTM$ with an Einstein primitive, not with an infinite-time observer.
+Finite-resolution numerical GR is Turing-computable, so $\KG$ differs from ordinary $K$ by $O(1)$ (the invariance theorem).
+Inflation $\Gamma$ \emph{names} an Einstein development; it does not run a supertask along $\lambda$.
+
+\paragraph{MH geometries are not typical under $W$.}
+They fail global hyperbolicity~\cite{hogarth2004,earman1993}.
+Inflation in this theory prefers globally hyperbolic Cauchy developments (Postulate~\ref{post:sample})~\cite{choquetbruhat1952}.
+An MH geometry is a long program: extra identifications, an inner horizon or naked singularity, a computer worldline of infinite proper time.
+That cost sits in $\KG$.
+Einsteinian dominance (Proposition~\ref{prop:einstein-dom}) then suppresses it by $\sim 2^{-c}$ relative to a short globally hyperbolic sample.
+The universes in which GR hypercomputes $K$ are exactly the universes the merge downweights.
+
+\paragraph{Holography forbids the infinite tape.}
+A region of area $A$ supports at most $A/4\ell_{P}^{2}$ independent bits~\cite{bekenstein1981,bousso1999,bao2017}.
+An MH computer needs unbounded memory along $\lambda$.
+Either those bits live in the observer's causal diamond, violating~\eqref{eq:holo}, or they live behind a horizon and cannot be communicated as a clean halt bit.
+Infinite blueshift at the MH event~\cite{earman1993,etesi2002} is the same obstruction in GR language: the signal that would carry the extra information destroys the receiver.
+
+\paragraph{An oracle does not give $\KG$ of the inhabited sample.}
+Chaitin: a system of complexity $n$ cannot prove $K(s)>n+O(1)$ for strings it can name~\cite{chaitin1974}.
+An observer whose own description is part of the sample cannot use an MH experiment inside that sample to certify $\KG$ of the whole sample.
+They can at best compute $K$ of \emph{smaller} strings, the way a halt oracle computes $K$ of programs shorter than the oracle's own specification.
+$W$ is a defining measure, like the Euclidean action in Hartle--Hawking.
+It is not a quantity the universe has to calculate in order to exist.
+
+\begin{proposition}[No typical halt oracle]
+\label{prop:no-halt}
+In a $W$-typical sample, there is no operational halt oracle available to a finite-area observer.
+Classical GR's Malament--Hogarth constructions, where they exist as solutions, have Solomonoff weight exponentially small in their extra program length relative to a globally hyperbolic Einsteinian development of comparable Cauchy data.
+\end{proposition}
+
+The continuum of GR can look like a halt oracle.
+The merge does not sample that oracle.
+If a $W$-typical universe presented an observer with a usable Malament--Hogarth worldline---a clean halt bit from an infinite computation in finite proper time, without destroying the receiver---that would falsify Einsteinian dominance or the holographic bound, and so falsify the theory.
+Hypercomputation in a typical sample would kill $k$, not complete it.
 
 \section{Predictions and tests}
 \label{sec:predictions}
@@ -782,6 +848,10 @@ A compelling empirical role for a non-separable Hilbert space, or for a physical
 Any microscopic counting of black-hole states that does not, at leading order, reproduce~\eqref{eq:KBH} as a Kolmogorov bound is counting something other than the weight the merge uses.
 Agreement of string, loop, and Euclidean calculations with $A/4\ell_{P}^{2}$ is, on this view, agreement that those calculations are enumerating shortest GR-machine descriptions.
 
+\paragraph{8. No typical halt oracle.}
+A $W$-typical, finite-area observer does not receive a clean halt bit from an infinite computation in finite proper time (Proposition~\ref{prop:no-halt}).
+A laboratory or astrophysical Malament--Hogarth protocol that worked would falsify Einsteinian dominance or the holographic bound.
+
 \section{Related work}
 
 The theory sits at a crossing that several programs have approached from one side.
@@ -800,6 +870,10 @@ They may bound $\KG$ in special states; they do not replace it.
 \paragraph{Quantum cosmology.}
 The Hartle--Hawking no-boundary state~\cite{hartle1983}, Vilenkin's tunneling state~\cite{vilenkin1983}, and decoherent histories~\cite{gellmann1993,hartle2008} are the coherent and decoherent merges in a different language, with $I_{E}$ in place of $\KG$.
 The present theory claims that $I_{E}$ is the continuum shadow of $\KG$ on saddles, and that the sum is over programs, not over a continuum of metrics.
+
+\paragraph{Relativistic hypercomputation.}
+Malament--Hogarth spacetimes and Kerr-based relativistic computers~\cite{earman1993,hogarth2004,etesi2002,nemeti2006,welch2008} show that classical GR can decide HALT.
+Section~\ref{sec:hyper} grants the classical construction and denies that $W$ samples it.
 
 \paragraph{Holography and finite-dimensional gravity.}
 't~Hooft, Susskind, Maldacena~\cite{tHooft1993,susskind1995,maldacena1998}; Bousso's bound~\cite{bousso1999}; Bao, Carroll, and Singh's locally finite-dimensional Hilbert space~\cite{bao2017}.
@@ -910,6 +984,7 @@ Black-hole entropy is program length.
 The arrow of time is the unfolding of a short program.
 The gravitational path integral was never an integral over the continuum.
 It was always this sum.
+Malament--Hogarth hypercomputation is a long program, not a typical merge.
 
 That is a theory of everything in the only sense the phrase can bear.
 It names the ontology, the measure, and the maps between the two infinities the twentieth century actually used.
@@ -1013,10 +1088,21 @@ V.~Dzhunushaliev and D.~Singleton,
 Entropy \textbf{4}, 3 (2002),
 arXiv:gr-qc/0108038.
 
+\bibitem{earman1993}
+J.~Earman and J.~D.~Norton,
+``Forever is a day: supertasks in Pitowsky and Malament--Hogarth spacetimes,''
+Philos.\ Sci.\ \textbf{60}, 22 (1993).
+
 \bibitem{elnaschie2004}
 M.~S.~El Naschie,
 ``A review of $E$-infinity theory and the mass spectrum of high energy particle physics,''
 Chaos Solitons Fractals \textbf{19}, 209 (2004).
+
+\bibitem{etesi2002}
+G.~Etesi and I.~N\'emeti,
+``Non-Turing computations via Malament--Hogarth space-times,''
+Int.\ J.\ Theor.\ Phys.\ \textbf{41}, 341 (2002),
+arXiv:gr-qc/0104023.
 
 \bibitem{everett1957}
 H.~Everett, III,
@@ -1084,6 +1170,11 @@ S.~W.~Hawking,
 ``Particle creation by black holes,''
 Commun.\ Math.\ Phys.\ \textbf{43}, 199 (1975).
 
+\bibitem{hogarth2004}
+M.~Hogarth,
+``Deciding arithmetic using SAD computers,''
+Brit.\ J.\ Philos.\ Sci.\ \textbf{55}, 681 (2004).
+
 \bibitem{kay1991}
 B.~S.~Kay and R.~M.~Wald,
 ``Theorems on the uniqueness and thermal properties of stationary, nonsingular, quasifree states on spacetimes with a bifurcate Killing horizon,''
@@ -1129,6 +1220,11 @@ V.~F.~Mukhanov, H.~A.~Feldman, and R.~H.~Brandenberger,
 ``Theory of cosmological perturbations,''
 Phys.\ Rep.\ \textbf{215}, 203 (1992).
 
+\bibitem{nemeti2006}
+I.~N\'emeti and G.~D\'avid,
+``Relativistic computers and the Turing barrier,''
+Appl.\ Math.\ Comput.\ \textbf{178}, 118 (2006).
+
 \bibitem{nielsen2006}
 M.~A.~Nielsen,
 ``A geometric approach to quantum circuit complexity,''
@@ -1166,6 +1262,12 @@ arXiv:gr-qc/9310026.
 A.~Vilenkin,
 ``Birth of inflationary universes,''
 Phys.\ Rev.\ D \textbf{27}, 2848 (1983).
+
+\bibitem{welch2008}
+P.~D.~Welch,
+``The extent of computation in Malament--Hogarth spacetimes,''
+Brit.\ J.\ Philos.\ Sci.\ \textbf{59}, 659 (2008),
+arXiv:gr-qc/0609035.
 
 \bibitem{wald1994}
 R.~M.~Wald,
