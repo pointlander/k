@@ -4,8 +4,9 @@
 This is the smallest setting where inflation Γ is an Einstein solver.
 
   1. The integer skeleton is finite-bit Cauchy data (a, H, φ, φ̇).
-  2. Sampling draws from a Born measure on that grid (and from the
-     on-shell slice where Einstein's constraint solves for H).
+  2. Sampling draws from a Born measure: Hartle–Hawking or Vilenkin
+     minisuperspace |Ψ|² (or a Gaussian / uniform control), on the
+     on-shell slice where Einstein's constraint solves for H.
   3. Γ integrates the minisuperspace Einstein–Klein–Gordon system (RK4).
   4. K̂_G = K(data | Einstein) + β I_off².
      On-shell 3-data does not pay for H (the constraint supplies it).
@@ -271,22 +272,64 @@ class Grid:
         return self.decode_lin(ip, -self.p_max, self.p_max)
 
 
-def born_weight(data: Cauchy, pot: Potential, state: str, kappa: float = 4.0) -> float:
-    """Unnormalized |ψ|² analog of the Kolmogorov vacuum."""
-    Hd = math.sqrt(max(pot.V(data.phi), 1e-12) / 3.0)
-    dH = data.H - Hd
-    chi2 = (dH / 1.5) ** 2 + (data.p / 1.5) ** 2 + (data.phi / 3.0) ** 2
+# 24π² in 8πG = 1: S^4 equator |I_E| = 12π²/V, so |Ψ|² ~ exp(±24π² I_0)
+# with I_0(turning point) = 1/V.
+_TWENTY_FOUR_PI_SQ = 24.0 * math.pi * math.pi
+_V_MIN = 1e-8
+
+
+def instanton_I0(a: float, V: float, curv: int) -> float:
+    """Halliwell under-barrier integral I_0, 8πG = 1.
+
+    At the closed-FLRW turning point a² = 3/V, I_0 = 1/V, so
+    24π² I_0 = 24π²/V, the standard HH/tunneling exponent.
+    For k = 0 there is no compact cap; use the nucleation value 1/V.
+    """
+    V_eff = max(V, _V_MIN)
+    if curv == 0:
+        return 1.0 / V_eff
+    a_tp = math.sqrt(3.0 / V_eff)
+    if a_tp <= 0.0:
+        return 1.0 / V_eff
+    x = min(max(a, 0.0), a_tp) / a_tp
+    return (a_tp * a_tp / 3.0) * (1.0 - (1.0 - x * x) ** 1.5)
+
+
+def log_born(data: Cauchy, pot: Potential, state: str, curv: int, kappa: float = 4.0) -> float:
+    """log |ψ|² for the Kolmogorov vacuum.
+
+    hh / tunneling are minisuperspace WKB amplitudes, not Gaussians.
+    `gaussian` is the old kinematic envelope, kept as a control.
+    """
+    V = pot.V(data.phi)
+    expanding = 0.0 if data.H >= 0.0 else -4.0  # mild log-penalty for contracting
     if state == "uniform":
-        return 1.0
+        return expanding
+    if state == "gaussian":
+        Hd = math.sqrt(max(V, 1e-12) / 3.0)
+        dH = data.H - Hd
+        chi2 = (dH / 1.5) ** 2 + (data.p / 1.5) ** 2 + (data.phi / 3.0) ** 2
+        return expanding - 0.5 * kappa * chi2
+    I0 = instanton_I0(data.a, V, curv)
+    if not math.isfinite(I0):
+        return float("-inf")
+    s = _TWENTY_FOUR_PI_SQ * I0
+    # Cap only the tunneling collapse; HH stays in log-space via log-sum-exp.
     if state == "hh":
-        # No-boundary analog: peaked on expanding, low kinetic, modest φ.
-        expanding = 1.0 if data.H >= 0.0 else 0.05
-        return expanding * math.exp(-0.5 * kappa * chi2)
+        return expanding + s
     if state == "tunneling":
-        # Tunneling analog: expanding, large |φ|.
-        expanding = 1.0 if data.H >= 0.0 else 0.05
-        return expanding * math.exp(-0.5 * kappa * ((dH / 1.5) ** 2 + (data.p / 1.5) ** 2 - (data.phi / 3.0) ** 2))
+        if V <= _V_MIN:
+            return float("-inf")
+        return expanding - s
     raise ValueError(state)
+
+
+def logsumexp(vals: list[float]) -> float:
+    finite = [v for v in vals if math.isfinite(v)]
+    if not finite:
+        return float("-inf")
+    m = max(finite)
+    return m + math.log(sum(math.exp(v - m) for v in finite))
 
 
 def on_shell_slice(grid: Grid, pot: Potential, curv: int) -> list[Cauchy]:
@@ -385,19 +428,20 @@ def run_cycle(
         samples = samples + off_shell_grid(grid)
 
     universes: list[Universe] = []
-    raw: list[float] = []
+    log_borns: list[float] = []
+    log_ws: list[float] = []
     for data in samples:
-        b = born_weight(data, pot, state)
-        if b <= 0.0:
+        lb = log_born(data, pot, state, curv)
+        if not math.isfinite(lb):
             continue
         dev = inflate(data, pot, t_max=t_max, dt=dt)
         k, i_off = kg_hat(data, pot, curv, grid.nbits, beta, dev.crashed)
-        weight = b * (2.0 ** (-k))
-        raw.append(weight)
+        log_borns.append(lb)
+        log_ws.append(lb - k * math.log(2.0))
         universes.append(
             Universe(
                 data=data,
-                born=b,
+                born=lb,  # replaced by normalized mass below
                 i_off=i_off if i_off != float("inf") else 1e9,
                 k_hat=k,
                 n_e=dev.n_e if math.isfinite(dev.n_e) else float("-inf"),
@@ -407,14 +451,13 @@ def run_cycle(
             )
         )
 
-    z = sum(raw)
-    if z <= 0.0:
+    if not universes:
         raise RuntimeError("all minisuperspace weights vanished")
-    # Normalize Born separately so we can compare Born mass vs W mass.
-    born_z = sum(u.born for u in universes)
-    for u, r in zip(universes, raw):
-        u.w = r / z
-        u.born = u.born / born_z
+    lZ = logsumexp(log_ws)
+    lB = logsumexp(log_borns)
+    for u, lw, lb in zip(universes, log_ws, log_borns):
+        u.w = math.exp(lw - lZ)
+        u.born = math.exp(lb - lB)
     return universes
 
 
@@ -441,6 +484,18 @@ def merge_a(universes: list[Universe], times: list[float]) -> list[float]:
 
 def entropy(ws: list[float]) -> float:
     return -sum(w * math.log2(w) for w in ws if w > 0.0)
+
+
+def weighted_mean(universes: list[Universe], f) -> float:
+    num = 0.0
+    den = 0.0
+    for u in universes:
+        val = f(u)
+        if not math.isfinite(val):
+            continue
+        num += u.w * val
+        den += u.w
+    return num / den if den > 0.0 else float("nan")
 
 
 # ---------------------------------------------------------------------------
@@ -480,11 +535,79 @@ def self_check() -> int:
     if w_on <= b_on:
         print(f"FAIL: Einsteinian dominance absent: W_on={w_on:.4f} Born_on={b_on:.4f}")
         return 1
+
+    qpot = Potential("quadratic", m=0.4)
+    hh = run_cycle(grid, qpot, curv=0, beta=8.0, state="hh", include_offshell=False, t_max=6.0, dt=0.1)
+    tun = run_cycle(grid, qpot, curv=0, beta=8.0, state="tunneling", include_offshell=False, t_max=6.0, dt=0.1)
+    phi_hh = weighted_mean(hh, lambda u: abs(u.data.phi))
+    phi_t = weighted_mean(tun, lambda u: abs(u.data.phi))
+    ne_hh = weighted_mean(hh, lambda u: u.n_e)
+    ne_t = weighted_mean(tun, lambda u: u.n_e)
+    if not (phi_t > phi_hh):
+        print(f"FAIL: tunneling should prefer larger |φ|: HH {phi_hh:.3f} T {phi_t:.3f}")
+        return 1
+    if not (ne_t > ne_hh):
+        print(f"FAIL: tunneling should prefer more e-folds: HH {ne_hh:.3f} T {ne_t:.3f}")
+        return 1
+
     print("self-check ok")
     print(f"  de Sitter I_off          {i_off:.2e}")
     print(f"  de Sitter a(t) rel err   {rel:.2e}   N_e = {dev.n_e:.3f}  (H t = {H * t:.3f})")
     print(f"  on-shell Born mass       {b_on:.4f}")
     print(f"  on-shell merge mass      {w_on:.4f}   (Einsteinian dominance)")
+    print(f"  HH  ⟨|φ|⟩={phi_hh:.3f}  ⟨N_e⟩={ne_hh:.3f}")
+    print(f"  T   ⟨|φ|⟩={phi_t:.3f}  ⟨N_e⟩={ne_t:.3f}   (tunneling: larger field, more inflation)")
+    return 0
+
+
+def _summarize(us: list[Universe], pot: Potential) -> dict:
+    star = max(us, key=lambda u: u.w)
+    return {
+        "phi": weighted_mean(us, lambda u: abs(u.data.phi)),
+        "V": weighted_mean(us, lambda u: pot.V(u.data.phi)),
+        "Ne": weighted_mean(us, lambda u: u.n_e),
+        "on": sum(u.w for u in us if u.data.on_shell),
+        "typical_phi": star.data.phi,
+        "typical_a": star.data.a,
+        "typical_Ne": star.n_e,
+        "typical_W": star.w,
+        "entropy": entropy([u.w for u in us]),
+    }
+
+
+def compare_vacua(args: argparse.Namespace) -> int:
+    """Hartle–Hawking vs Vilenkin horse race on the same grid."""
+    pot = Potential(args.potential, V0=args.V0, m=args.m)
+    grid = Grid(args.bits)
+    include_off = not args.no_offshell
+    rows = []
+    for state in ("hh", "tunneling"):
+        us = run_cycle(
+            grid, pot, args.curvature, args.beta, state, include_off, args.t_max, args.dt
+        )
+        s = _summarize(us, pot)
+        s["state"] = state
+        rows.append((state, us, s))
+
+    print("Hartle–Hawking vs tunneling")
+    print(f"  potential   {args.potential}  V0={args.V0:g}  m={args.m:g}  k={args.curvature}")
+    print(f"  |Ψ_HH|² ∝ exp(+24π² I_0)    |Ψ_T|² ∝ exp(−24π² I_0)")
+    print(f"  I_0(turning point) = 1/V    (8πG=1)")
+    print()
+    print(f"  {'vacuum':<12}{'⟨|φ|⟩':>8}{'⟨V⟩':>10}{'⟨N_e⟩':>8}{'on-shell':>10}{'H(W)':>8}{'typ φ':>8}{'typ N_e':>8}")
+    for state, _us, s in rows:
+        print(
+            f"  {state:<12}{s['phi']:8.3f}{s['V']:10.4f}{s['Ne']:8.3f}"
+            f"{s['on']:10.4f}{s['entropy']:8.3f}{s['typical_phi']:8.3f}{s['typical_Ne']:8.3f}"
+        )
+    hh, tun = rows[0][2], rows[1][2]
+    print()
+    if args.potential == "lambda":
+        print("  λ is constant, so HH and tunneling differ by a global factor;")
+        print("  the typical Cauchy data agree. Use --potential quadratic to see the split.")
+    else:
+        print("  HH prefers small V (little inflation); tunneling prefers large V (more e-folds).")
+        print(f"  Δ⟨|φ|⟩ = {tun['phi'] - hh['phi']:+.3f}    Δ⟨N_e⟩ = {tun['Ne'] - hh['Ne']:+.3f}")
     return 0
 
 
@@ -501,7 +624,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--V0", type=float, default=0.5, help="cosmological constant (lambda potential)")
     p.add_argument("--m", type=float, default=0.4, help="inflaton mass (quadratic potential)")
     p.add_argument("--curvature", type=int, choices=(0, 1), default=0, help="spatial k in Friedmann")
-    p.add_argument("--state", choices=("hh", "tunneling", "uniform"), default="hh")
+    p.add_argument("--state", choices=("hh", "tunneling", "gaussian", "uniform"), default="hh")
+    p.add_argument("--compare", action="store_true", help="Hartle–Hawking vs tunneling horse race")
     p.add_argument("--no-offshell", action="store_true", help="only the Einstein (constraint-solved) slice")
     p.add_argument("--t-max", type=float, default=8.0)
     p.add_argument("--dt", type=float, default=0.08)
@@ -511,6 +635,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.self_check:
         return self_check()
+    if args.compare:
+        return compare_vacua(args)
 
     if args.bits < 2 or args.bits > 4:
         p.error("--bits must be in [2, 4]")
@@ -551,7 +677,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"  skeleton       {args.bits} bits × 4  + on-shell 3-slice")
     print(f"  samples        {len(universes)}   (on-shell {n_on}, off-shell {n_off})")
     print(f"  potential      {args.potential}   V0={args.V0:g}  m={args.m:g}  k={args.curvature}")
-    print(f"  state          |Ω⟩ = {args.state}")
+    print(f"  state          |Ω⟩ = {args.state}   (hh/tunneling = minisuperspace |Ψ|²)")
     print(f"  weight         W ∝ |ψ|² 2^{{-K̂_G}},  K̂_G = K(data|Einstein) + {args.beta:g} I_off²")
     print(f"  Born entropy   {born_H:.3f} bits")
     print(f"  merge entropy  {merge_H:.3f} bits")
@@ -567,10 +693,12 @@ def main(argv: list[str] | None = None) -> int:
     print("    " + "  ".join(f"t={t:<4g} a={a:.3f}" for t, a in zip(report_times, a_bar)))
     print()
     d = star.data
+    I0 = instanton_I0(d.a, pot.V(d.phi), args.curvature)
     print(
         f"  typical universe   on_shell={d.on_shell}  a={d.a:.3f}  H={d.H:.3f}  "
         f"φ={d.phi:.3f}  φ̇={d.p:.3f}"
     )
+    print(f"                     I_0={I0:.4g}   24π² I_0={_TWENTY_FOUR_PI_SQ * I0:.4g}")
     print(
         f"                     W={star.w:.4f}  Born={star.born:.4f}  "
         f"K̂_G={star.k_hat:.2f}  I_off={star.i_off:.3e}  N_e={star.n_e:.3f}  crashed={star.crashed}"

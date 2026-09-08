@@ -34,10 +34,12 @@ A minisuperspace cycle, where \(\Gamma\) is an Einstein solver for FLRW plus a h
 ```sh
 python3 toy/minisuperspace.py --self-check
 python3 toy/minisuperspace.py --bits 3 --state hh
-python3 toy/minisuperspace.py --potential quadratic --state tunneling --curvature 1
+python3 toy/minisuperspace.py --compare --potential quadratic --bits 3 --no-offshell
 ```
 
 On-shell 3-data (Friedmann solves for \(H\)) is exponentially preferred over generic 4-data. That is Einstein as a compressor.
+
+`--state hh` and `--state tunneling` are minisuperspace WKB amplitudes, \(|\Psi|^2\propto\exp(\pm 24\pi^2 I_0)\) with \(I_0=1/V\) at the turning point (\(8\pi G=1\)). Hartle–Hawking piles on small \(V\) (little inflation); Vilenkin piles on large \(V\) (more e-folds). `--compare` prints both. `--state gaussian` is the old kinematic envelope.
 
 ## Lean
 
