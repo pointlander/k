@@ -969,6 +969,19 @@ The algebraic core---isolated $2^{c}$ bias, equal-$K$ clicks, additive non-swamp
 A qubit register is not a universe, and the tiny language is not $K$.
 What survives is the isolation theorem the paper warned about:~\eqref{eq:born-corr} is accessible only in a fully specified, isolated device whose total $\KG$ is dominated by the register, and it is not a claim that laboratory Born frequencies fail.
 
+\subsection{Dimensionality analog}
+
+A fifth companion program makes Dzhunushaliev's complexity-driven dimensional reduction~\cite{dzhunushaliev1998,dzhunushaliev2002} a merge on a finite catalog of gravity plugins $(D,L,\text{moduli})$.
+Local graviton polarizations are $D(D-3)/2$.
+The $p$-th Lovelock density~\cite{lovelock1971} is identically zero for $D<2p$, topological at $D=2p$, and dynamical for $D>2p$: Einstein--Hilbert is $p=1$; Gauss--Bonnet is topological in $4$d and dynamical for $D\ge 5$.
+Plugins that do not compress Cauchy data---zero local gravitons, or no dynamical term---pay $I_{\mathrm{dead}}$.
+$\widehat{\KG}=K(\mathrm{plugin})+\beta I_{\mathrm{dead}}$, with $4$d Einstein--Hilbert the $2$-bit vacuum; other $D$ pay $\abs{D-4}$, extra Lovelock terms and moduli their bits.
+On the catalog $D=2{\ldots}6$ with optional Gauss--Bonnet and moduli in $\{0,1,2,4\}$, the typical plugin is $4$d Einstein--Hilbert, the $D=4$ family takes merge mass $0.55$ against $D=5$ at $0.30$ and $2{+}1$ at $0.001$, and compressors take $0.997$ against Born $0.40$.
+Choquet--Bruhat well-posedness for $D\ge 3$ remains an input.
+The algebraic core---$\mathrm{dof}(4)=2$, $\mathrm{dof}(3)=0$, Gauss--Bonnet topological in $4$d, and $2^{1+\beta}$ dominance of $4$d Einstein over dead $2{+}1$---is a Lean 4 module in the repository.
+A catalog is not $3{+}1$ gravity.
+What survives is the compressor count: $2{+}1$ is dead, extra dimensions and curvature junk are longer, $3{+}1$ Einstein is Kolmogorov-elite.
+
 \section{Open problems}
 
 \begin{enumerate}
@@ -996,7 +1009,8 @@ What survives is the isolation theorem the paper warned about:~\eqref{eq:born-co
   The remaining task is a bound in a concrete device, including whether $\Delta K$ can be made larger than laboratory systematics.
 
   \item \textbf{Dimensionality.}
-  Show that $3+1$ is the shortest well-posed Einstein compressor, in the sense of Dzhunushaliev's complexity-driven dimensional reduction~\cite{dzhunushaliev1998,dzhunushaliev2002} made into a theorem about $\KG$.
+  A catalog analog is in the repository: $4$d Einstein--Hilbert is the unique maximizer, $2{+}1$ is dead, extra dimensions and Lovelock junk pay bits.
+  The remaining task is to lift the graviton-count and Lovelock identities to a theorem that $3{+}1$ Einstein is the shortest well-posed compressor among encodings of field theories, not among a hand-listed catalog.
 \end{enumerate}
 
 \section{The theory in one page}

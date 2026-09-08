@@ -64,6 +64,16 @@ python3 toy/interferometer.py --full --bits 6
 
 Isolated short-vs-dump disagrees with Born by \(2^{\Delta K}\). Two short clicks, and a thermal bath with \(L \ge K(\mathrm{dump})\), track Born. Additive \(K(\mathrm{env})+K(\mathrm{reg})\) does not swamp: a large fridge is not enough. That is laboratory QFT recovered as a limit of the merge.
 
+A 3+1 dimensionality analog, scoring gravity plugins by graviton polarizations \(D(D-3)/2\), Lovelock status, and compactification bits, is [`toy/dimension.py`](toy/dimension.py):
+
+```sh
+python3 toy/dimension.py --self-check
+python3 toy/dimension.py
+python3 toy/dimension.py --compare
+```
+
+4d Einstein–Hilbert is the unique maximizer. 2+1 is dead (zero local gravitons). Extra dimensions and curvature junk pay bits. Compressors take essentially all the merge mass. That is Dzhunushaliev's complexity-driven dimensional reduction as a merge.
+
 ## Lean
 
 The mathematical core is formalized in Lean 4 (no mathlib) under [`lean/`](lean/):
@@ -72,4 +82,4 @@ The mathematical core is formalized in Lean 4 (no mathlib) under [`lean/`](lean/
 cd lean && lake build
 ```
 
-Proved: Cantor's split (`{0,1}*` bijects with `ℕ`; `ℕ → Bool` is uncountable), Kraft's inequality (`∑ 2^{N-|p|} ≤ 2^N` for prefix-free programs, recovering the holographic bound `|P| ≤ 2^A` at equal length), Einsteinian dominance of the Occam factor, that the merge is a countable sum, that constant (Einstein) configurations minimize discrete curvature, the minisuperspace cycle (Friedmann constraint, de Sitter fixed point, on-shell 3-data as compressor), 1+1 evaporation (Bondi constraint, leftover holography, constant Page \(\widehat{K}_G\), Page dominance over remnants and scrambles), and the laboratory Born correction (isolated short-vs-dump disagrees with Born; thermal records and equal-K clicks track Born; additive environments do not swamp). Physics postulates (the GR Cauchy problem, the existence of a GR-machine) remain inputs. `cd lean && lake build` checks `K.Mini` against `toy/minisuperspace.py`, `K.Evap` against `toy/evaporation.py`, and `K.Lab` against `toy/interferometer.py`.
+Proved: Cantor's split (`{0,1}*` bijects with `ℕ`; `ℕ → Bool` is uncountable), Kraft's inequality (`∑ 2^{N-|p|} ≤ 2^N` for prefix-free programs, recovering the holographic bound `|P| ≤ 2^A` at equal length), Einsteinian dominance of the Occam factor, that the merge is a countable sum, that constant (Einstein) configurations minimize discrete curvature, the minisuperspace cycle (Friedmann constraint, de Sitter fixed point, on-shell 3-data as compressor), 1+1 evaporation (Bondi constraint, leftover holography, constant Page \(\widehat{K}_G\), Page dominance over remnants and scrambles), the laboratory Born correction (isolated short-vs-dump disagrees with Born; thermal records and equal-K clicks track Born; additive environments do not swamp), and 3+1 dimensionality (`D(D-3)/2` polarizations, Lovelock zero/topological/dynamical, 4d Einstein–Hilbert as the 2-bit vacuum compressor). Physics postulates (the GR Cauchy problem, the existence of a GR-machine) remain inputs. `cd lean && lake build` checks `K.Mini` against `toy/minisuperspace.py`, `K.Evap` against `toy/evaporation.py`, `K.Lab` against `toy/interferometer.py`, and `K.Dim` against `toy/dimension.py`.

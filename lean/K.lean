@@ -17,6 +17,9 @@ This library proves the mathematical core of `paper/k.tex`:
 * Laboratory Born correction: isolated short-vs-dump disagrees with Born;
   thermal records and equal-K clicks track Born; additive environments
   do not swamp.
+* Dimensionality: local graviton polarizations `D(D−3)/2`, Lovelock
+  zero/topological/dynamical, and 4d Einstein–Hilbert as the 2-bit vacuum
+  compressor over 2+1 (dead) and 5d plus moduli.
 
 Physics postulates (the GR Cauchy problem, the existence of a GR-machine,
 the identification of `I_EH` with `K_G` on saddles) remain inputs.  What is
@@ -32,3 +35,4 @@ import K.Analog
 import K.Mini
 import K.Evap
 import K.Lab
+import K.Dim
