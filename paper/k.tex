@@ -936,6 +936,26 @@ with Halliwell's under-barrier integral $I_{0}$ equal to $1/V$ at the closed tur
 On a quadratic inflaton the merge then does the textbook split: Hartle--Hawking concentrates on small $V$ and few e-folds; Vilenkin concentrates on large $V$ and more e-folds.
 That is the no-boundary versus tunneling contest as a $\KG$ comparison on a finite skeleton. The remaining vacuum problem is to lift this from minisuperspace to $3{+}1$.
 
+\subsection{Evaporation analog}
+
+A third companion program makes $\Gamma$ a discrete Vaidya law in $1{+}1$.
+The skeleton is an $N$-bit microstate $s$ of a hole of area $N$ (units $4\ell_{P}^{2}=1$, so area $=$ bits $=$ Bondi mass), a retarded time $t$, and a remaining mass $m$.
+Each tick converts one Planck unit of mass into outgoing flux (constant $1{+}1$ luminosity).
+On-shell, Einstein supplies the remaining mass: $m+t=N$, and the off-shell cost is $I_{E}=\abs{m+t-N}$.
+Holography of the leftover hole is $I_{H}=\max(0,\text{bits in the hole}-m)$.
+Three families of programs for the same $s$ are merged:
+\begin{itemize}
+  \item \emph{Page:} radiation is a reversible function of $s$; leftover bits equal $m$; $\widehat{\KG}$ stays $K(s)$ along the history~\cite{page1993}.
+  \item \emph{Remnant:} all $N$ bits stay inside as $m$ drops; $I_{H}=t$; $\widehat{\KG}=K(s)+\beta t^{2}$.
+  \item \emph{Scramble:} independent incompressible radiation of length $t$, interior still holding $s$; $\widehat{\KG}=K(s)+t+\beta t^{2}$.
+\end{itemize}
+The weight is the $k$-weight,
+$\widehat{\KG}=K(\mathrm{data}\mid\mathrm{Einstein})+\beta(I_{E}^{2}+I_{H}^{2})$.
+On an $N=6$ grid the merge is democratic at $t=0$ and Page-dominated by $t=N/2$; remnants and scrambles are exponentially downweighted; Schwarzschild ($s=0^{N}$) is the typical Page universe.
+The algebraic core---Bondi constraint, leftover holography, constant Page $\widehat{\KG}$, and $2^{\beta t^{2}}$ dominance of Page over remnants---is a Lean 4 module in the repository.
+Kraft's inequality is the static bound; this analog is that bound along a history.
+$1{+}1$ Vaidya is not $3{+}1$ evaporation, but it is the smallest place the information-problem reading of~\eqref{eq:KBH} can fail.
+
 \section{Open problems}
 
 \begin{enumerate}
@@ -955,8 +975,8 @@ That is the no-boundary versus tunneling contest as a $\KG$ comparison on a fini
   State a precise minimization problem whose solution would \emph{be} the Standard Model: a shortest matter Lagrangian, in a fixed encoding of field theories, compatible with a given low-energy sample.
 
   \item \textbf{Evaporation.}
-  Compute, in a controlled analog or a minisuperspace model, whether $\KG$ of an evaporating hole plus radiation remains equal to $A_{\mathrm{initial}}/4\ell_{P}^{2}$ along the history.
-  This is the information problem as a problem in gravitational Kolmogorov complexity.
+  A $1{+}1$ Vaidya analog is in the repository: Page $\widehat{\KG}$ of hole plus radiation stays $K(s)$ along the history, while remnants and scrambles pay $\beta t^{2}$.
+  The remaining task is the same conservation in $3{+}1$, including whether the matching to~\eqref{eq:KBH} is exact (no firewall, no remnant).
 
   \item \textbf{Complexity corrections.}
   Bound $\KG(a)-\KG(b)$ in a concrete few-qubit interferometer and say whether~\eqref{eq:born-corr} is experimentally accessible.
@@ -1229,6 +1249,11 @@ Appl.\ Math.\ Comput.\ \textbf{178}, 118 (2006).
 M.~A.~Nielsen,
 ``A geometric approach to quantum circuit complexity,''
 Science \textbf{311}, 1133 (2006); quant-ph/0502070.
+
+\bibitem{page1993}
+D.~N.~Page,
+``Information in black hole radiation,''
+Phys.\ Rev.\ Lett.\ \textbf{71}, 3743 (1993).
 
 \bibitem{rovelli2004}
 C.~Rovelli,

@@ -12,6 +12,8 @@ This library proves the mathematical core of `paper/k.tex`:
   minimize `E_smooth` and dominate the analog weight.
 * Minisuperspace: Friedmann constraint, de Sitter fixed point, Einstein as
   compressor, and k-weight dominance of on-shell 3-data.
+* Evaporation: Bondi constraint, leftover holography, constant Page `K̂_G`,
+  and dominance of the Page family over remnants and scrambles.
 
 Physics postulates (the GR Cauchy problem, the existence of a GR-machine,
 the identification of `I_EH` with `K_G` on saddles) remain inputs.  What is
@@ -25,3 +27,4 @@ import K.Complexity
 import K.Theory
 import K.Analog
 import K.Mini
+import K.Evap

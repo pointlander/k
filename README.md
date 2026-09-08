@@ -41,6 +41,17 @@ On-shell 3-data (Friedmann solves for \(H\)) is exponentially preferred over gen
 
 `--state hh` and `--state tunneling` are minisuperspace WKB amplitudes, \(|\Psi|^2\propto\exp(\pm 24\pi^2 I_0)\) with \(I_0=1/V\) at the turning point (\(8\pi G=1\)). Hartle–Hawking piles on small \(V\) (little inflation); Vilenkin piles on large \(V\) (more e-folds). `--compare` prints both. `--state gaussian` is the old kinematic envelope.
 
+A 1+1 evaporation cycle, where \(\Gamma\) is discrete Vaidya mass loss, is [`toy/evaporation.py`](toy/evaporation.py):
+
+```sh
+python3 toy/evaporation.py --self-check
+python3 toy/evaporation.py --bits 6
+python3 toy/evaporation.py --compare --bits 6 --no-offshell
+python3 toy/evaporation.py --history --bits 6
+```
+
+On-shell Page radiation (a reversible function of the microstate) keeps \(\widehat{K}_G = K(s)\) along the history. Remnants that store the bits inside as the area drops, and scrambles that emit independent radiation, pay \(\beta t^2\) and are exponentially downweighted. That is the holographic bound as a process.
+
 ## Lean
 
 The mathematical core is formalized in Lean 4 (no mathlib) under [`lean/`](lean/):
@@ -49,4 +60,4 @@ The mathematical core is formalized in Lean 4 (no mathlib) under [`lean/`](lean/
 cd lean && lake build
 ```
 
-Proved: Cantor's split (`{0,1}*` bijects with `ℕ`; `ℕ → Bool` is uncountable), Kraft's inequality (`∑ 2^{N-|p|} ≤ 2^N` for prefix-free programs, recovering the holographic bound `|P| ≤ 2^A` at equal length), Einsteinian dominance of the Occam factor, that the merge is a countable sum, that constant (Einstein) configurations minimize discrete curvature, and the minisuperspace cycle (Friedmann constraint, de Sitter fixed point, on-shell 3-data as compressor). Physics postulates (the GR Cauchy problem, the existence of a GR-machine) remain inputs. `cd lean && lake build` checks `K.Mini` against `toy/minisuperspace.py`.
+Proved: Cantor's split (`{0,1}*` bijects with `ℕ`; `ℕ → Bool` is uncountable), Kraft's inequality (`∑ 2^{N-|p|} ≤ 2^N` for prefix-free programs, recovering the holographic bound `|P| ≤ 2^A` at equal length), Einsteinian dominance of the Occam factor, that the merge is a countable sum, that constant (Einstein) configurations minimize discrete curvature, the minisuperspace cycle (Friedmann constraint, de Sitter fixed point, on-shell 3-data as compressor), and 1+1 evaporation (Bondi constraint, leftover holography, constant Page \(\widehat{K}_G\), Page dominance over remnants and scrambles). Physics postulates (the GR Cauchy problem, the existence of a GR-machine) remain inputs. `cd lean && lake build` checks `K.Mini` against `toy/minisuperspace.py` and `K.Evap` against `toy/evaporation.py`.
