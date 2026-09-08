@@ -70,13 +70,12 @@ theorem prefixFree_shortest (U : Machine) (hU : PrefixFreeMachine U)
   obtain ⟨i, hi, rfl⟩ := List.getElem_of_mem hp
   exact (hshort ⟨i, hi⟩).1.halts
 
-/-- Solomonoff / Kraft, integer form: the Occam mass of any finite list of
-programs is bounded.  Combined with `holographic_bound` this is a
-semimeasure on samples. -/
+/-- Solomonoff / Kraft, integer form: a prefix-free family occupies at most
+the full binary tree of depth `N`.  This is a semimeasure on samples. -/
 theorem solomonoff_semimeasure
-    (ps : List Bitstring) (N : Nat) :
-    kraftSum ps N ≤ ps.length * 2 ^ N :=
-  kraftSum_le_mul ps N
+    (ps : List Bitstring) (N : Nat) (h : PrefixFree ps) :
+    kraftSum ps N ≤ 2 ^ N :=
+  kraft_le ps N h
 
 /-- Einsteinian dominance, Occam factor only.
 

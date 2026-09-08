@@ -107,10 +107,10 @@ theorem occam_holography
     ps.length ≤ 2 ^ A :=
   holographic_bound ps A hnodup hlen
 
-/-- Occam mass of any finite program list is finite. -/
-theorem occam_semimeasure (ps : List Bitstring) :
-    kraftSum ps T.cutoff ≤ ps.length * 2 ^ T.cutoff :=
-  kraftSum_le_mul ps T.cutoff
+/-- Occam mass of any finite prefix-free program list is a semimeasure. -/
+theorem occam_semimeasure (ps : List Bitstring) (h : PrefixFree ps) :
+    kraftSum ps T.cutoff ≤ 2 ^ T.cutoff :=
+  kraft_le ps T.cutoff h
 
 /-- Physical continuum hypothesis, for objects the cycle actually constructs.
 
